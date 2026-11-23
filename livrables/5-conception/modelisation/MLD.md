@@ -4,6 +4,10 @@ Modèle logique relationnel obtenu à partir du [MCD](MCD.svg) par les règles d
 
 **Notation :** <ins>souligné</ins> = clé primaire · `#` = clé étrangère · `(NULL)` = clé étrangère facultative.
 
+![MLD EscapeOps](MLD.svg)
+
+Le schéma ci-dessus ([MLD.svg](MLD.svg)) montre chaque table avec ses colonnes et leur type prévu en MySQL ; chaque flèche part d'une clé étrangère et pointe vers la table référencée.
+
 ## 1. Règles de passage appliquées
 
 | Cas dans le MCD | Transformation | Où dans EscapeOps |

@@ -6,6 +6,7 @@ Méthode **Merise** : on part du dictionnaire de données, on construit le **MCD
 |---|---|
 | [MCD.svg](MCD.svg) | Modèle conceptuel : entités, associations, cardinalités |
 | [README.md](README.md) (ce fichier) | Dictionnaire de données, lecture des cardinalités, choix de modélisation |
+| [MLD.svg](MLD.svg) | Modèle logique en schéma : tables, colonnes, types, clés primaires et étrangères |
 | [MLD.md](MLD.md) | Règles de passage, schéma relationnel, contraintes d'intégrité |
 
 ![MCD EscapeOps](MCD.svg)
