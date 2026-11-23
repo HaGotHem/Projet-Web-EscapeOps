@@ -46,7 +46,7 @@ Quand une même relation référence UTILISATEUR, la clé étrangère est **reno
 | Relation | Clé étrangère | Référence | NULL ? | Issue de | Suppression du parent |
 |---|---|---|---|---|---|
 | SESSION | id_salle | SALLE(id_salle) | non | ACCUEILLIR | refusée (RESTRICT) |
-| SESSION | id_game_master | UTILISATEUR(id_utilisateur) | **oui** | ANIMER | mise à NULL (la session redevient sans GM) |
+| SESSION | id_game_master | UTILISATEUR(id_utilisateur) | **oui** | ANIMER | refusée (RESTRICT) : la colonne figure dans le CHECK E5, et MariaDB/MySQL y interdisent toute action référentielle (SET NULL, CASCADE) |
 | RESERVATION | id_session | SESSION(id_session) | non | CONCERNER | refusée (RESTRICT) |
 | HISTORIQUE_SESSION | id_session | SESSION(id_session) | non | TRACER | cascade (l'historique suit la session) |
 | AFFECTER | id_salle | SALLE(id_salle) | non | AFFECTER | refusée (RESTRICT) |
