@@ -1,0 +1,293 @@
+<title>Roadmap EscapeOps</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout : une frise des 5 soirs (jalons + charge à l'échelle), puis une ligne par jour : rail daté à gauche, tâches à droite. */
+:root{
+  --bg:#F2F4F7; --surface:#FFFFFF; --sunk:#E8ECF2; --ink:#16202E; --muted:#5A6678; --line:#D3DAE4;
+  --accent:#1E5A7A; --accent-soft:#DCEAF2; --brass:#A8741A; --brass-soft:#F6EBD3;
+  --ok:#1F7A4F; --ok-soft:#DDF1E6; --warn:#A8741A; --bad:#B3392F; --bad-soft:#F8E1DE;
+  --f-display:"Space Grotesk","Segoe UI",system-ui,sans-serif;
+  --f-text:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F151D; --surface:#17202B; --sunk:#1D2834; --ink:#E6EBF1; --muted:#97A3B4; --line:#2B3846;
+    --accent:#6FB3D6; --accent-soft:#1A3140; --brass:#E2AE52; --brass-soft:#3A2D14;
+    --ok:#56C48D; --ok-soft:#173326; --warn:#E2AE52; --bad:#EE7A6F; --bad-soft:#3B1E1B;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F151D; --surface:#17202B; --sunk:#1D2834; --ink:#E6EBF1; --muted:#97A3B4; --line:#2B3846;
+  --accent:#6FB3D6; --accent-soft:#1A3140; --brass:#E2AE52; --brass-soft:#3A2D14;
+  --ok:#56C48D; --ok-soft:#173326; --warn:#E2AE52; --bad:#EE7A6F; --bad-soft:#3B1E1B;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--f-text);-webkit-text-size-adjust:100%}
+.wrap{max-width:1080px;margin:0 auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.15;text-wrap:balance}
+h1{font-size:clamp(26px,4vw,36px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:20px;font-weight:700}
+h3{font-size:16px;font-weight:700}
+p{margin:0}
+a{color:var(--accent)}
+.mono,code{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* En-tête */
+header{display:flex;flex-direction:column;gap:10px}
+.lede{max-width:68ch;color:var(--muted)}
+.facts{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:13.5px}
+.facts b{font-family:var(--f-mono);font-weight:600;color:var(--ink)}
+.rules{display:flex;flex-wrap:wrap;gap:6px}
+.rule{font-family:var(--f-mono);font-size:12.5px;padding:2px 8px;border-radius:3px;background:var(--accent-soft);color:var(--accent)}
+
+/* Frise */
+.frise{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px 18px 14px;overflow-x:auto}
+.frise-in{min-width:560px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0}
+.fday{display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;padding:0 6px}
+.fday .bars{height:132px;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:3px;position:relative}
+.bar{width:34px;background:var(--accent);border-radius:2px 2px 0 0;position:relative}
+.bar.opt{background:repeating-linear-gradient(-45deg,var(--brass) 0 4px,transparent 4px 8px);border:1px solid var(--brass);border-bottom:0}
+.bar span{position:absolute;top:-19px;left:50%;transform:translateX(-50%);font-family:var(--f-mono);font-size:11.5px;color:var(--ink);white-space:nowrap}
+.bar.opt span{color:var(--brass)}
+.gridline{position:absolute;left:0;right:0;border-top:1px dashed var(--line)}
+.gridline em{position:absolute;left:0;top:-9px;font-family:var(--f-mono);font-style:normal;font-size:10.5px;color:var(--muted);background:var(--surface);padding-right:4px}
+.track{position:relative;width:100%;height:22px}
+.track::before{content:"";position:absolute;left:0;right:0;top:10px;border-top:2px solid var(--line)}
+.fday:first-child .track::before{left:50%}
+.fday:last-child .track::before{right:50%}
+.diamond{position:absolute;left:50%;top:3px;width:16px;height:16px;margin-left:-8px;transform:rotate(45deg);background:var(--surface);border:2px solid var(--accent)}
+.fday.final .diamond{background:var(--brass);border-color:var(--brass)}
+.fday .lbl{text-align:center;display:flex;flex-direction:column;gap:2px}
+.fday .lbl .d{font-family:var(--f-display);font-weight:700;font-size:14px}
+.fday .lbl .j{font-size:12px;color:var(--muted);line-height:1.35}
+.fday.today .lbl .d::after{content:" · aujourd'hui";color:var(--bad);font-family:var(--f-mono);font-size:11px;font-weight:400}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted);margin-top:12px}
+.legend i{display:inline-block;width:14px;height:10px;margin-right:6px;vertical-align:-1px;border-radius:2px}
+.legend .l1{background:var(--accent)}
+.legend .l2{background:repeating-linear-gradient(-45deg,var(--brass) 0 3px,transparent 3px 6px);border:1px solid var(--brass)}
+.legend .l3{width:10px;height:10px;transform:rotate(45deg);border:2px solid var(--accent);background:var(--surface)}
+
+/* Jours */
+.days{display:flex;flex-direction:column;gap:14px}
+.day{display:grid;grid-template-columns:200px minmax(0,1fr);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.day.today{border-color:var(--bad);box-shadow:inset 4px 0 0 var(--bad)}
+.rail{background:var(--sunk);padding:16px;display:flex;flex-direction:column;gap:10px;border-right:1px solid var(--line)}
+.rail .date{font-family:var(--f-display);font-weight:700;font-size:22px;line-height:1}
+.rail .date small{display:block;font-family:var(--f-mono);font-weight:400;font-size:12px;color:var(--muted);margin-top:4px}
+.rail .load{font-family:var(--f-mono);font-size:13px}
+.rail .load b{font-size:18px}
+.jalon{border-left:3px solid var(--accent);padding-left:9px;font-size:13px;line-height:1.4}
+.jalon .eyebrow{display:block;margin-bottom:2px;font-size:10.5px}
+.day.final .jalon{border-left-color:var(--brass)}
+.event{font-size:12.5px;background:var(--bad-soft);color:var(--ink);border-radius:4px;padding:6px 8px;line-height:1.4}
+.event b{color:var(--bad)}
+.body{padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.tasks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.task{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:4px 12px;padding:9px 0;border-bottom:1px dashed var(--line);align-items:baseline}
+.task:last-child{border-bottom:0}
+.code{font-family:var(--f-mono);font-weight:600;font-size:12.5px;color:var(--accent);background:var(--accent-soft);border-radius:3px;padding:1px 0;text-align:center}
+.task .t{font-weight:500;min-width:0}
+.task .h{font-family:var(--f-mono);font-size:13px;color:var(--muted);white-space:nowrap}
+.task .meta{grid-column:2/4;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted)}
+.task .meta code{font-size:12px;color:var(--ink)}
+.st{font-family:var(--f-mono);font-size:11px;padding:0 6px;border-radius:3px;margin-left:6px;vertical-align:1px;white-space:nowrap}
+.st.done{background:var(--ok-soft);color:var(--ok)}
+.st.doing{background:var(--accent-soft);color:var(--accent)}
+.st.moved{background:var(--brass-soft);color:var(--brass)}
+.task.opt .code{background:var(--brass-soft);color:var(--brass)}
+.task.done .t{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+.optsep{font-size:12.5px;color:var(--brass);font-family:var(--f-mono);padding-top:6px;border-top:1px solid var(--line);margin-top:2px}
+
+/* Blocs du bas */
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.panel ol,.panel ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.path{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px}
+.path .code{padding:1px 6px}
+.path i{color:var(--muted);font-style:normal}
+.never{font-size:13px;background:var(--ok-soft);border-radius:4px;padding:8px 10px}
+.never b{color:var(--ok)}
+footer{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+
+@media (max-width:760px){
+  .day{grid-template-columns:minmax(0,1fr)}
+  .rail{border-right:0;border-bottom:1px solid var(--line);flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:10px 18px}
+  .rail .jalon{flex:1 1 100%}
+  .rail .event{flex:1 1 100%}
+  .grid2{grid-template-columns:minmax(0,1fr)}
+  .task{grid-template-columns:40px minmax(0,1fr) auto}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Les Archives Obscures · semaine projet du 23 au 27 novembre 2026</span>
+    <h1>Roadmap EscapeOps</h1>
+    <p class="lede">Un jalon démontrable chaque soir, la release <span class="mono">v1.0.0</span> vendredi. Cette page reprend le planning actualisé du 23/11 dans Jalon. Les statuts à jour restent dans Jalon.</p>
+    <div class="facts">
+      <span><b>48 h</b> de charge contractuelle</span>
+      <span><b>+5 h</b> d'extensions si le temps le permet</span>
+      <span><b>5</b> jalons</span>
+      <span><b>1</b> personne</span>
+    </div>
+    <div class="rules" aria-label="Règles contractuelles">
+      <span class="rule">E5 game master non dédoublable</span>
+      <span class="rule">E7 annulation SANS_FRAIS / TARDIVE</span>
+      <span class="rule">E9 contrôle après 10 parties</span>
+    </div>
+  </header>
+
+  <section class="frise" aria-labelledby="frise-t">
+    <h2 id="frise-t" class="sr-only" style="position:absolute;left:-9999px">Charge et jalons par jour</h2>
+    <div class="frise-in" id="frise"></div>
+    <div class="legend">
+      <span><i class="l1"></i>charge prévue (heures)</span>
+      <span><i class="l2"></i>extensions facultatives</span>
+      <span><i class="l3"></i>jalon du soir</span>
+    </div>
+  </section>
+
+  <section class="days" id="days" aria-label="Plan jour par jour"></section>
+
+  <div class="grid2">
+    <section class="panel">
+      <h2>Chemin critique</h2>
+      <p class="muted" style="font-size:13.5px">Un retard sur l'une de ces tâches décale directement la release.</p>
+      <div class="path">
+        <span class="code">C3</span><i>→</i><span class="code">S2</span><i>→</i><span class="code">S4</span><i>→</i><span class="code">S5</span><i>→</i><span class="code">R3</span><i>→</i><span class="code">Q1</span><i>→</i><span class="code">V2</span><i>→</i><span class="code">V4</span>
+      </div>
+      <div class="path">
+        <span class="code">A2</span><i>→</i><span class="code">Q2</span><i>→</i><span class="code">V1</span><i>→</i><span class="code">V4</span>
+        <span class="muted" style="font-size:12.5px">(évolution du mercredi)</span>
+      </div>
+      <p style="font-size:13.5px"><span class="code" style="padding:1px 6px">S5</span> est le pivot : E5, E7, E9 et l'API en dépendent toutes. C'est la tâche à protéger mardi.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Si un jalon est manqué</h2>
+      <p class="muted" style="font-size:13.5px">Plan B du risque de surcharge : on coupe dans cet ordre.</p>
+      <ol>
+        <li>Extensions <span class="code" style="padding:0 5px">X1</span> <span class="code" style="padding:0 5px">X2</span> <span class="code" style="padding:0 5px">X3</span> : présentées à l'oral comme pistes d'évolution.</li>
+        <li>Recherche et tableau de bord (<span class="code" style="padding:0 5px">S6</span>) réduits au minimum.</li>
+      </ol>
+      <p class="never"><b>On ne coupe jamais</b> E5, E7, E9, l'API JSON ni le SQL avancé contractuel (2 vues, 1 procédure, 1 trigger).</p>
+    </section>
+  </div>
+
+  <section class="panel">
+    <h2>Chaque soir, avant de fermer</h2>
+    <ol>
+      <li>Dans Jalon : statut et charge réelle de chaque tâche du jour, chemin de la preuve, jalon coché s'il est atteint.</li>
+      <li>Pour chaque écart : la cause et l'action prévue, pas seulement le constat.</li>
+      <li>Déposer les captures dans <code>livrables/</code> sous la forme <code>AAAA-MM-JJ_TACHE_description.png</code> et cocher les critères vérifiés.</li>
+      <li>Commit et push du travail du jour, avec un message qui dit ce qui a changé.</li>
+      <li>Générer le compte rendu dans Jalon : ce qui est constaté, proposé, décidé.</li>
+    </ol>
+  </section>
+
+  <footer>
+    <span>Source : planning actualisé du 23/11/2026 dans <a href="https://claude.ai/artifact/GjjGTftvrvbShPzkBwPaBk" target="_blank" rel="noopener">Jalon</a>, référence figée le même jour.</span>
+    <span>Preuves rangées dans le dossier <code>livrables/</code> du dépôt.</span>
+  </footer>
+</div>
+
+<script>
+"use strict";
+const DAYS = [
+  {iso:"2026-11-23", nom:"Lundi", d:"23 nov.", jalon:"Conception montrée et première page issue de la base", tasks:[
+    {c:"C1", t:"Réserver et justifier le triplet E5 + E7 + E9", h:1, s:"done", p:"docs/CHOIX_REGLES.md", l:"liv5"},
+    {c:"C2", t:"Dessiner les maquettes des 8 écrans", h:2, s:"doing", p:"livrables/5-conception/maquettes/", l:"liv5"},
+    {c:"C3", t:"Concevoir le modèle de données (MCD / MLD)", h:2, s:"doing", p:"livrables/5-conception/modelisation/", l:"liv5"},
+    {c:"S1", t:"Initialiser le dépôt avec le starter Slim + Medoo", h:1, p:"premier commit poussé"},
+    {c:"S2", t:"Écrire le schéma SQL et les données fictives", h:2, p:"database/schema.sql, seed.sql", l:"liv2", dep:"C3, S1"},
+    {c:"S3", t:"Afficher la vitrine des salles depuis la base", h:2, p:"capture de la vitrine", l:"liv1", dep:"S2"}
+  ]},
+  {iso:"2026-11-24", nom:"Mardi", d:"24 nov.", jalon:"Parcours métier complet avec authentification et rôles", tasks:[
+    {c:"C4", t:"Rédiger le contrat d'API", h:1, s:"moved", m:"déplacé du lundi", p:"docs/api.md", l:"liv5", dep:"C3"},
+    {c:"S4", t:"Mettre en place connexion, déconnexion et rôles", h:4, p:"captures connexion + 403", l:"liv1", dep:"S2"},
+    {c:"S5", t:"Gérer salles, sessions et réservations de groupe", h:4, p:"captures du parcours", l:"liv1", dep:"S4"},
+    {c:"R2", t:"E7 : classer les annulations SANS_FRAIS / TARDIVE", h:2, s:"moved", m:"avancé du mercredi", p:"tests/regle-e7 + captures 26 h / 2 h", l:"liv1", dep:"S5"}
+  ]},
+  {iso:"2026-11-25", nom:"Mercredi", d:"25 nov.", jalon:"Règles E5, E7, E9 et API JSON opérationnelles", ev:"<b>Ticket d'évolution</b> imposé par le client : l'analyser avant de coder.", tasks:[
+    {c:"R1", t:"E5 : refuser le dédoublement d'un game master", h:4, p:"tests/regle-e5 + captures refus", l:"liv1", dep:"S5"},
+    {c:"R3", t:"E9 : badge CONTROLE_A_PREVOIR après 10 sessions", h:3, p:"tests/regle-e9 + capture du badge", l:"liv1", dep:"S5"},
+    {c:"A1", t:"Exposer l'API JSON des salles, sessions et incidents", h:2, p:"requêtes HTTP de test", l:"liv3", dep:"C4, S5"},
+    {c:"A2", t:"Analyser l'impact du ticket d'évolution", h:1, p:"ANALYSE_EVOLUTION.md", l:"liv6"}
+  ]},
+  {iso:"2026-11-26", nom:"Jeudi", d:"26 nov.", jalon:"Évolution et incident traités sans régression, SQL avancé intégré", ev:"<b>Incident</b> imposé : reproduire, trouver la cause, corriger, ajouter un test.", tasks:[
+    {c:"Q1", t:"Créer les 2 vues, la procédure stockée et le trigger", h:4, p:"database/advanced.sql + test de reconstruction", l:"liv2", dep:"R3"},
+    {c:"S6", t:"Construire le tableau de bord et la recherche sur la vue SQL", h:2, s:"moved", m:"déplacé du mardi", p:"capture du tableau de bord", l:"liv1", dep:"S5, Q1"},
+    {c:"Q2", t:"Implémenter l'évolution et rejouer la non-régression", h:3, p:"commit + résultats des tests", l:"liv4", dep:"A2"},
+    {c:"Q3", t:"Corriger l'incident et rédiger le rapport", h:2, p:"RAPPORT_INCIDENT.md", l:"liv6"}
+  ]},
+  {iso:"2026-11-27", nom:"Vendredi", d:"27 nov.", final:true, jalon:"Release v1.0.0 livrée et démonstration réalisée", tasks:[
+    {c:"V1", t:"Dérouler la recette des règles E5, E7 et E9", h:2, p:"RECETTE.md (T01 à T11)", l:"liv4", dep:"Q2, Q3"},
+    {c:"V2", t:"Vérifier la sécurité et la sauvegarde / restauration", h:1, p:"RECETTE.md, section sécurité", l:"liv4", dep:"Q1"},
+    {c:"V3", t:"Rédiger le README et l'installation", h:2, p:"README.md", l:"liv6"},
+    {c:"V4", t:"Publier la release v1.0.0 et préparer la démo", h:1, p:"release GitHub + DEMONSTRATION.md", l:"liv1", dep:"V1, V2, V3"},
+    {c:"X1", t:"Extension E10 : checklist avant ouverture", h:2, opt:true, p:"capture + test", dep:"V1"},
+    {c:"X2", t:"Extension E4 : 20 minutes entre deux sessions", h:2, opt:true, p:"capture + test", dep:"X1"},
+    {c:"X3", t:"Extension E3 : groupe de 2 à 6 joueurs", h:1, opt:true, p:"capture + test", dep:"X2"}
+  ]}
+];
+const ST = {done:"fait", doing:"en cours", moved:""};
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+function todayParis(){
+  try { return new Intl.DateTimeFormat("fr-CA",{timeZone:"Europe/Paris",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date()); }
+  catch(e){ return new Date().toISOString().slice(0,10); }
+}
+const today = todayParis();
+const sum = (ts, opt) => ts.filter(t => !!t.opt === opt).reduce((a,t) => a + t.h, 0);
+
+/* Frise : barres à l'échelle, 12 h = hauteur pleine */
+const MAXH = 12, PX = 132;
+const frise = document.getElementById("frise");
+frise.innerHTML = DAYS.map(d => {
+  const main = sum(d.tasks,false), opt = sum(d.tasks,true);
+  const first = d === DAYS[0];
+  const grid = [4,8,12].map(v => `<div class="gridline" style="bottom:${v/MAXH*PX}px">${first ? `<em>${v} h</em>` : ""}</div>`).join("");
+  const bars = `<div class="bar" style="height:${main/MAXH*PX}px" title="${main} h prévues"><span>${main} h</span></div>` +
+    (opt ? `<div class="bar opt" style="height:${opt/MAXH*PX}px" title="${opt} h facultatives"><span>+${opt}</span></div>` : "");
+  return `<div class="fday${d.final ? " final" : ""}${d.iso === today ? " today" : ""}">
+    <div class="bars">${grid}${bars}</div>
+    <div class="track"><span class="diamond" aria-hidden="true"></span></div>
+    <div class="lbl"><span class="d">${d.nom} ${d.d.split(" ")[0]}</span><span class="j">${esc(d.jalon)}</span></div>
+  </div>`;
+}).join("");
+
+/* Jours */
+const days = document.getElementById("days");
+days.innerHTML = DAYS.map(d => {
+  const main = sum(d.tasks,false), opt = sum(d.tasks,true);
+  const row = t => `<li class="task${t.opt ? " opt" : ""}${t.s === "done" ? " done" : ""}">
+      <span class="code">${t.c}</span>
+      <span class="t">${esc(t.t)}${t.s ? `<span class="st ${t.s}">${t.s === "moved" ? esc(t.m) : ST[t.s]}</span>` : ""}</span>
+      <span class="h">${t.h} h</span>
+      <span class="meta"><span>Preuve : <code>${esc(t.p)}</code></span>${t.l ? `<span>${t.l}</span>` : ""}${t.dep ? `<span>après ${esc(t.dep)}</span>` : ""}</span>
+    </li>`;
+  const mainT = d.tasks.filter(t => !t.opt), optT = d.tasks.filter(t => t.opt);
+  return `<article class="day${d.final ? " final" : ""}${d.iso === today ? " today" : ""}" id="j-${d.iso}">
+    <div class="rail">
+      <div class="date">${d.nom}<small>${d.d} 2026${d.iso === today ? " · aujourd'hui" : ""}</small></div>
+      <div class="load"><b>${main} h</b>${opt ? ` <span class="muted">+${opt} h facultatives</span>` : ""}</div>
+      <div class="jalon"><span class="eyebrow">Jalon du soir</span>${esc(d.jalon)}</div>
+      ${d.ev ? `<div class="event">${d.ev}</div>` : ""}
+    </div>
+    <div class="body">
+      <ul class="tasks">${mainT.map(row).join("")}</ul>
+      ${optT.length ? `<div class="optsep">Seulement si la recette V1 est passée</div><ul class="tasks">${optT.map(row).join("")}</ul>` : ""}
+    </div>
+  </article>`;
+}).join("");
+</script>
