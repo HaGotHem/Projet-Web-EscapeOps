@@ -22,7 +22,7 @@ Il rassemble :
 |---|---|---|---|
 | Choix des règles | [../../docs/CHOIX_REGLES.md](../../docs/CHOIX_REGLES.md) | C1 | ☑ rédigé · ☐ validé par l'enseignant |
 | Maquettes des 8 écrans | [maquettes/](maquettes/) | C2 | ☐ |
-| MCD / MLD | [modelisation/](modelisation/) | C3 | ☐ |
+| MCD / MLD | [modelisation/](modelisation/) | C3 | ☑ rédigé · ☐ validé par l'enseignant |
 | Contrat d'API | `docs/api.md` du dépôt | C4 | ☐ |
 | Fiche E5 | [regles/FICHE_E5.md](regles/FICHE_E5.md) | R1 | ☐ |
 | Fiche E7 | [regles/FICHE_E7.md](regles/FICHE_E7.md) | R2 | ☐ |
