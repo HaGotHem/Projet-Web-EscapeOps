@@ -1,0 +1,175 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 2000,
+      "title": "01 · Vitrine publique",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    {
+      "file": "FicheSalle.dc.html",
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 1760,
+      "title": "02 · Fiche salle publique",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    {
+      "file": "Reservation.dc.html",
+      "x": 3040,
+      "y": 0,
+      "w": 1440,
+      "h": 1300,
+      "title": "03 · Réservation de groupe",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    {
+      "file": "Connexion.dc.html",
+      "x": 4560,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "title": "04 · Connexion",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    {
+      "file": "Cockpit.dc.html",
+      "x": 0,
+      "y": 2400,
+      "w": 1440,
+      "h": 1320,
+      "title": "05 · Cockpit du responsable",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    {
+      "file": "CockpitTablette.dc.html",
+      "x": 1520,
+      "y": 2400,
+      "w": 820,
+      "h": 1180,
+      "title": "05b · Cockpit — tablette"
+    },
+    {
+      "file": "Session.dc.html",
+      "x": 2420,
+      "y": 2400,
+      "w": 1440,
+      "h": 1560,
+      "title": "06 · Fiche session (responsable)",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    {
+      "file": "SessionConflit.dc.html",
+      "x": 3940,
+      "y": 2400,
+      "w": 1440,
+      "h": 1560,
+      "title": "07 · Conflit E5 — game master déjà pris",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    {
+      "file": "AnnulationSansFrais.dc.html",
+      "x": 0,
+      "y": 4400,
+      "w": 1440,
+      "h": 1000,
+      "title": "08a · Annulation E7 — sans frais (26 h)"
+    },
+    {
+      "file": "AnnulationTardive.dc.html",
+      "x": 1520,
+      "y": 4400,
+      "w": 1440,
+      "h": 1000,
+      "title": "08b · Annulation E7 — tardive (2 h)"
+    },
+    {
+      "file": "SalleResponsable.dc.html",
+      "x": 3040,
+      "y": 4400,
+      "w": 1440,
+      "h": 1560,
+      "title": "09 · Fiche salle (responsable)",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    {
+      "file": "Incident.dc.html",
+      "x": 4560,
+      "y": 4400,
+      "w": 1440,
+      "h": 1200,
+      "title": "10 · Saisie d'un incident (game master)",
+      "expand": "fill"
+    },
+    {
+      "file": "Etats.dc.html",
+      "x": 0,
+      "y": 6400,
+      "w": 1440,
+      "h": 820,
+      "title": "Référence · Badges d'état"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "t-public",
+      "x": 0,
+      "y": -300,
+      "w": 240,
+      "maxW": 6000,
+      "text": "Partie publique — Les Archives Obscures",
+      "kind": "title1"
+    },
+    {
+      "id": "t-ops",
+      "x": 0,
+      "y": 2100,
+      "w": 240,
+      "maxW": 5380,
+      "text": "Exploitation — cockpit, sessions, règle E5",
+      "kind": "title1"
+    },
+    {
+      "id": "t-regles",
+      "x": 0,
+      "y": 4100,
+      "w": 240,
+      "maxW": 6000,
+      "text": "Règles E7 & E9 — annulation, maintenance, incidents",
+      "kind": "title1"
+    },
+    {
+      "id": "t-ref",
+      "x": 0,
+      "y": 6100,
+      "w": 240,
+      "maxW": 1440,
+      "text": "Référence — badges d'état",
+      "kind": "title1"
+    },
+    {
+      "id": "n-scenario",
+      "x": 6080,
+      "y": 2400,
+      "w": 420,
+      "text": "Scénario commun à tous les écrans\n\nNous sommes le lundi 23 novembre 2026, il est 16 h 00.\n\n• « Les Lanternes » (6 joueurs) ont réservé Le Cabinet des Ombres à 18 h 00. Aucun game master n'est encore affecté.\n• Léa Martin anime La Crypte de l'Archiviste de 18 h 00 à 19 h 00 → conflit E5 si on l'affecte aux Lanternes.\n• Hugo Bernard est libre après 17 h 00.\n• Incident ouvert : « Mécanisme de la porte secrète bloqué » (équipement critique, Cabinet).\n• Laboratoire Interdit : 10/10 → CONTRÔLE À PRÉVOIR. Crypte : 9/10.\n• E7 : 26 h avant → sans frais ; 2 h avant → tardive.",
+      "size": 24,
+      "fill": "orange"
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}

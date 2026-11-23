@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Vitrine — Les Archives Obscures</title>
+<script src="./_runtime/react.js"></script>
+<script src="./_runtime/react-dom.js"></script>
+<script src="./_runtime/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#F2F0EB}
+a{color:#2F4BFF}a:hover{color:#1F33C7}
+a:focus-visible,button:focus-visible{outline:2px solid #2F4BFF;outline-offset:3px}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #F2F0EB; color: #1E1F22; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 16px; line-height: 1.55">
+
+  <!-- En-tête -->
+  <header style="border-bottom: 1px solid #D9D6CF">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 20px clamp(16px, 4vw, 48px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+      <a href="Main.dc.html" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: #1E1F22">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#2F4BFF" stroke-width="1.5" aria-hidden="true"><circle cx="18" cy="18" r="16"></circle><circle cx="18" cy="18" r="11"></circle><path d="M18 12a3 3 0 0 1 1.6 5.5L21 24h-6l1.4-6.5A3 3 0 0 1 18 12z"></path></svg>
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 600; letter-spacing: 0.01em">Les Archives Obscures</span>
+      </a>
+      <nav aria-label="Navigation principale" style="display: flex; flex-wrap: wrap; align-items: center; gap: 28px; font-size: 15px">
+        <a href="#salles" style="color: #1E1F22; text-decoration: none">Les salles</a>
+        <a href="#fonctionnement" style="color: #1E1F22; text-decoration: none">Comment ça marche</a>
+        <a href="#infos" style="color: #1E1F22; text-decoration: none">Infos pratiques</a>
+        <a href="Connexion.dc.html" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border: 1px solid #B9B5AC; border-radius: 6px; color: #5C5F66; text-decoration: none; font-size: 14px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11h14v10H5z M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+          Espace équipe
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Accroche -->
+  <section style="border-bottom: 1px solid #D9D6CF">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 88px clamp(16px, 4vw, 48px) 80px; display: flex; flex-wrap: wrap; gap: 56px; align-items: center">
+      <div style="flex: 999 1 560px; min-width: 0">
+        <p style="margin: 0 0 20px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #2F4BFF">Escape games · 3 salles · groupes de 2 à 6</p>
+        <h1 style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: clamp(48px, 6vw, 84px); line-height: 1.02; letter-spacing: -0.01em; max-width: 14ch">Chaque archive cache une issue.</h1>
+        <p style="margin: 28px 0 0; font-size: 19px; line-height: 1.6; color: #3F4148; max-width: 54ch">Trois salles privatisées pour votre groupe. Entre 60 et 75 minutes pour en sortir. Quand vous réservez un créneau, la salle est à vous seuls.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px">
+          <a href="#salles" style="display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 26px; background: #2F4BFF; color: #FFFFFF; border-radius: 6px; font-weight: 600; text-decoration: none">
+            Voir les prochains créneaux
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14 M13 6l6 6-6 6"></path></svg>
+          </a>
+          <a href="#fonctionnement" style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 22px; border: 1px solid #B9B5AC; color: #1E1F22; border-radius: 6px; text-decoration: none">Comment ça marche</a>
+        </div>
+      </div>
+      <div aria-hidden="true" style="flex: 1 1 340px; display: flex; justify-content: center">
+        <div style="position: relative; width: 340px; height: 380px; border: 1px solid #B9B5AC; border-radius: 4px; background: #FFFFFF; display: flex; flex-direction: column; justify-content: space-between; padding: 28px; box-sizing: border-box">
+          <div style="display: flex; justify-content: space-between; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.12em; color: #66696F">
+            <span>REGISTRE</span><span>AO · 1923</span>
+          </div>
+          <svg width="284" height="220" viewBox="0 0 284 220" fill="none" stroke="#2F4BFF" stroke-width="1.2">
+            <rect x="12" y="10" width="260" height="200" rx="2"></rect>
+            <path d="M12 60h260 M12 110h260 M12 160h260 M142 10v200"></path>
+            <path d="M68 30h18 M198 30h18 M68 80h18 M198 80h18 M68 130h18 M198 130h18 M68 180h18 M198 180h18"></path>
+            <circle cx="207" cy="135" r="15"></circle>
+            <path d="M207 128a4 4 0 0 1 2 7.5l1.5 6h-7l1.5-6a4 4 0 0 1 2-7.5z"></path>
+          </svg>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid #D9D6CF; padding-top: 14px">
+            <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 20px; color: #3F4148">Tiroir n° 7 — scellé</span>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #66696F">3 / 3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Les salles -->
+  <section id="salles" style="border-bottom: 1px solid #D9D6CF">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 80px clamp(16px, 4vw, 48px)">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 40px">
+        <div>
+          <p style="margin: 0 0 10px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #2F4BFF">Les trois dossiers</p>
+          <h2 style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 48px; line-height: 1.1">Choisissez votre salle</h2>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 20px; font-size: 14px; color: #5C5F66">
+          <span style="display: inline-flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2F4BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"></path></svg>Disponible — cliquez pour réserver</span>
+          <span style="display: inline-flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#66696F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11h14v10H5z M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Déjà réservé par un groupe</span>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px">
+        <sc-for list="{{rooms}}" as="room" hint-placeholder-count="3">
+          <article style="display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #D9D6CF; border-radius: 6px; overflow: hidden">
+            <div style="position: relative; height: 200px; background: #E9E6DF; border-bottom: 1px solid #D9D6CF; display: flex; align-items: center; justify-content: center">
+              <svg width="240" height="200" viewBox="0 0 240 200" fill="none" stroke="#2F4BFF" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{room.art}}"></path></svg>
+              <span style="position: absolute; top: 14px; left: 16px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.12em; color: #66696F">{{room.cote}}</span>
+            </div>
+            <div style="padding: 24px 24px 8px; display: flex; flex-direction: column; gap: 12px; flex-grow: 1">
+              <h3 style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 30px; line-height: 1.1">{{room.name}}</h3>
+              <p style="margin: 0; color: #3F4148; font-size: 15px">{{room.theme}}</p>
+              <dl style="margin: 4px 0 0; display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 14px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2F4BFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0 M12 7v5l3 2"></path></svg>
+                  <dt style="color: #5C5F66">Durée</dt><dd style="margin: 0; font-weight: 600">{{room.duree}}</dd>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2F4BFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 10a3 3 0 1 0 0-6a3 3 0 1 0 0 6 M22 20v-2a4 4 0 0 0-3-3.9 M16 4.1a3 3 0 0 1 0 5.8"></path></svg>
+                  <dt style="color: #5C5F66">Groupe</dt><dd style="margin: 0; font-weight: 600">{{room.capacite}}</dd>
+                </div>
+              </dl>
+            </div>
+            <div style="padding: 16px 24px 24px">
+              <p style="margin: 0 0 10px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #66696F">Prochains créneaux publiés</p>
+              <ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+                <sc-for list="{{room.slots}}" as="slot" hint-placeholder-count="4">
+                  <li>
+                    <sc-if value="{{slot.libre}}" hint-placeholder-val="{{ true }}">
+                      <a href="Reservation.dc.html" style="display: flex; flex-direction: column; gap: 2px; min-height: 44px; padding: 8px 12px; border: 1px solid #2F4BFF; border-radius: 4px; text-decoration: none; color: #1E1F22">
+                        <span style="font-size: 13px; color: #3F4148">{{slot.jour}}</span>
+                        <span style="display: flex; align-items: center; justify-content: space-between; gap: 6px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 15px">{{slot.heure}}
+                          <span style="display: inline-flex; align-items: center; gap: 4px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 500; font-size: 12px; color: #2F4BFF"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"></path></svg>Libre</span>
+                        </span>
+                      </a>
+                    </sc-if>
+                    <sc-if value="{{slot.pris}}" hint-placeholder-val="{{ false }}">
+                      <div style="display: flex; flex-direction: column; gap: 2px; min-height: 44px; padding: 8px 12px; border: 1px dashed #BDBAB2; border-radius: 4px; color: #66696F">
+                        <span style="font-size: 13px">{{slot.jour}}</span>
+                        <span style="display: flex; align-items: center; justify-content: space-between; gap: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 15px">{{slot.heure}}
+                          <span style="display: inline-flex; align-items: center; gap: 4px; font-family: 'IBM Plex Sans', sans-serif; font-size: 12px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11h14v10H5z M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Réservé</span>
+                        </span>
+                      </div>
+                    </sc-if>
+                  </li>
+                </sc-for>
+              </ul>
+              <a href="FicheSalle.dc.html" style="display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; margin-top: 16px; border-top: 1px solid #D9D6CF; padding-top: 12px; text-decoration: none; font-weight: 600">
+                Découvrir la salle
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14 M13 6l6 6-6 6"></path></svg>
+              </a>
+            </div>
+          </article>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fonctionnement -->
+  <section id="fonctionnement" style="border-bottom: 1px solid #D9D6CF">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 80px clamp(16px, 4vw, 48px)">
+      <h2 style="margin: 0 0 40px; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 44px; line-height: 1.1">Comment ça marche</h2>
+      <ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 32px">
+        <li style="border-top: 1px solid #2F4BFF; padding-top: 20px">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #2F4BFF">Étape 1</span>
+          <h3 style="margin: 8px 0 8px; font-size: 20px; font-weight: 600">Choisissez une salle et un créneau</h3>
+          <p style="margin: 0; color: #3F4148">Seuls les créneaux encore libres sont réservables. Un créneau = une salle privatisée pour un seul groupe.</p>
+        </li>
+        <li style="border-top: 1px solid #2F4BFF; padding-top: 20px">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #2F4BFF">Étape 2</span>
+          <h3 style="margin: 8px 0 8px; font-size: 20px; font-weight: 600">Présentez votre groupe</h3>
+          <p style="margin: 0; color: #3F4148">Un nom d'équipe, le nombre de joueurs (dans la capacité de la salle) et un contact. Aucun paiement n'est demandé.</p>
+        </li>
+        <li style="border-top: 1px solid #2F4BFF; padding-top: 20px">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #2F4BFF">Étape 3</span>
+          <h3 style="margin: 8px 0 8px; font-size: 20px; font-weight: 600">Recevez votre confirmation</h3>
+          <p style="margin: 0; color: #3F4148">Arrivez 15 minutes avant l'heure. Une annulation faite au moins 24 h avant le début est classée « sans frais ».</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Pied de page -->
+  <footer id="infos">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 48px clamp(16px, 4vw, 48px); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; font-size: 14px; color: #5C5F66">
+      <div>
+        <p style="margin: 0 0 6px; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; color: #1E1F22">Les Archives Obscures</p>
+        <p style="margin: 0">[ADRESSE] · [TÉLÉPHONE] · contact@archives-obscures.example</p>
+      </div>
+      <p style="margin: 0; align-self: flex-end">Ouvert du mardi au dimanche · Sessions de 14 h 00 à 22 h 00</p>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = (jour, heure, libre) => ({ jour: jour, heure: heure, libre: libre, pris: !libre });
+    return {
+      rooms: [
+        {
+          cote: 'DOSSIER N° 01',
+          name: 'Le Cabinet des Ombres',
+          theme: "Le cabinet de curiosités d'un collectionneur disparu. Retrouvez le registre qu'il a caché avant l'aube.",
+          duree: '60 min', capacite: '2 à 6 joueurs',
+          art: 'M40 24h160v152H40z M40 62h160 M40 100h160 M40 138h160 M120 24v152 M74 43h12 M154 43h12 M74 81h12 M154 81h12 M74 119h12 M154 119h12 M74 157h12 M154 157h12 M160 113a6 6 0 1 0 .01 0',
+          slots: [s('Lun. 23 nov.', '18 h 00', false), s('Mar. 24 nov.', '18 h 00', false), s('Mar. 24 nov.', '20 h 00', true), s('Mer. 25 nov.', '18 h 30', true)]
+        },
+        {
+          cote: 'DOSSIER N° 02',
+          name: "La Crypte de l'Archiviste",
+          theme: "Sous la bibliothèque, l'archiviste a scellé un secret. Percez son système de classement avant que la crypte ne se referme.",
+          duree: '60 min', capacite: '2 à 5 joueurs',
+          art: 'M40 178V96a80 80 0 0 1 160 0v82 M24 178h192 M78 178V104a42 42 0 0 1 84 0v74 M120 40v-18 M110 30h20 M100 140h40 M100 156h40',
+          slots: [s('Lun. 23 nov.', '18 h 00', false), s('Lun. 23 nov.', '20 h 00', true), s('Mar. 24 nov.', '17 h 00', true), s('Mar. 24 nov.', '19 h 00', true)]
+        },
+        {
+          cote: 'DOSSIER N° 03',
+          name: 'Le Laboratoire Interdit',
+          theme: "Une expérience interrompue en 1923. Reprenez les notes du professeur et terminez la formule avant qu'elle ne vous échappe.",
+          duree: '75 min', capacite: '3 à 6 joueurs',
+          art: 'M100 26h40 M108 26v48L68 150a14 14 0 0 0 12 22h80a14 14 0 0 0 12-22L132 74V26 M82 128h76 M112 150h.01 M130 142h.01 M120 160h.01 M40 172h160',
+          slots: [s('Lun. 23 nov.', '20 h 30', false), s('Mar. 24 nov.', '19 h 00', true), s('Mer. 25 nov.', '17 h 15', true), s('Mer. 25 nov.', '20 h 30', true)]
+        }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

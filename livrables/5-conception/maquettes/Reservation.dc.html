@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Réserver un créneau — Les Archives Obscures</title>
+<script src="./_runtime/react.js"></script>
+<script src="./_runtime/react-dom.js"></script>
+<script src="./_runtime/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#F2F0EB}
+a{color:#2F4BFF}a:hover{color:#1F33C7}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #2F4BFF;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #F2F0EB; color: #1E1F22; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 16px; line-height: 1.55">
+
+  <header style="border-bottom: 1px solid #D9D6CF">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 20px clamp(16px, 4vw, 48px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+      <a href="Main.dc.html" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: #1E1F22">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#2F4BFF" stroke-width="1.5" aria-hidden="true"><circle cx="18" cy="18" r="16"></circle><circle cx="18" cy="18" r="11"></circle><path d="M18 12a3 3 0 0 1 1.6 5.5L21 24h-6l1.4-6.5A3 3 0 0 1 18 12z"></path></svg>
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 600">Les Archives Obscures</span>
+      </a>
+      <ol aria-label="Étapes de la réservation" style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 14px">
+        <li style="display: flex; align-items: center; gap: 8px; color: #5C5F66">
+          <span style="display: inline-flex; width: 26px; height: 26px; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid #2F4BFF; color: #2F4BFF"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"></path></svg></span>
+          Créneau
+        </li>
+        <li style="display: flex; align-items: center; gap: 8px; {{step2}}">
+          <span style="display: inline-flex; width: 26px; height: 26px; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid #2F4BFF; font-family: 'IBM Plex Mono', monospace; font-size: 13px">2</span>
+          Votre groupe
+        </li>
+        <li style="display: flex; align-items: center; gap: 8px; {{step3}}">
+          <span style="display: inline-flex; width: 26px; height: 26px; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid #B9B5AC; font-family: 'IBM Plex Mono', monospace; font-size: 13px">3</span>
+          Confirmation
+        </li>
+      </ol>
+    </div>
+  </header>
+
+  <main style="max-width: 1280px; margin: 0 auto; padding: 48px clamp(16px, 4vw, 48px) 96px">
+
+    <sc-if value="{{isForm}}" hint-placeholder-val="{{ true }}">
+      <a href="FicheSalle.dc.html" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 15px; text-decoration: none">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5 M11 6l-6 6 6 6"></path></svg>
+        Changer de créneau
+      </a>
+      <h1 style="margin: 12px 0 8px; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 52px; line-height: 1.05">Présentez votre groupe</h1>
+      <p style="margin: 0 0 40px; color: #3F4148; font-size: 18px">La salle sera privatisée pour vous seuls. Aucun paiement n'est demandé.</p>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-start">
+        <form style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 28px">
+          <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 20px">
+            <legend style="padding: 0; margin-bottom: 16px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.14em; color: #2F4BFF">LE GROUPE</legend>
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <label for="groupe" style="font-weight: 600">Nom du groupe</label>
+              <input id="groupe" type="text" value="Les Feux Follets" autocomplete="off" style="min-height: 52px; padding: 0 16px; background: #FFFFFF; border: 1px solid #B9B5AC; border-radius: 6px; color: #1E1F22; font: inherit; font-size: 17px">
+              <span style="font-size: 14px; color: #5C5F66">Il apparaîtra sur votre confirmation et sera annoncé par le game master.</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <span id="lbl-joueurs" style="font-weight: 600">Nombre de joueurs</span>
+              <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap">
+                <div role="group" aria-labelledby="lbl-joueurs" style="display: inline-flex; align-items: stretch; border: 1px solid #B9B5AC; border-radius: 6px; overflow: hidden">
+                  <button type="button" onClick="{{moins}}" disabled="{{minAtteint}}" aria-label="Retirer un joueur" style="width: 52px; min-height: 52px; background: #FFFFFF; color: #1E1F22; border: 0; border-right: 1px solid #B9B5AC; font: inherit; font-size: 22px; cursor: pointer">−</button>
+                  <output aria-live="polite" style="display: flex; align-items: center; justify-content: center; min-width: 72px; font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 600; background: #F2F0EB">{{joueurs}}</output>
+                  <button type="button" onClick="{{plus}}" disabled="{{maxAtteint}}" aria-label="Ajouter un joueur" style="width: 52px; min-height: 52px; background: #FFFFFF; color: #1E1F22; border: 0; border-left: 1px solid #B9B5AC; font: inherit; font-size: 22px; cursor: pointer">+</button>
+                </div>
+                <span style="font-size: 14px; color: #5C5F66">{{capaciteMsg}}</span>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset style="margin: 0; padding: 28px 0 0; border: 0; border-top: 1px solid #D9D6CF; display: flex; flex-direction: column; gap: 20px">
+            <legend style="padding: 0; margin-bottom: 16px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.14em; color: #2F4BFF">LA PERSONNE À CONTACTER</legend>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px">
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <label for="contact" style="font-weight: 600">Nom et prénom</label>
+                <input id="contact" type="text" value="Inès Garnier" autocomplete="name" style="min-height: 52px; padding: 0 16px; background: #FFFFFF; border: 1px solid #B9B5AC; border-radius: 6px; color: #1E1F22; font: inherit; font-size: 17px">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <label for="email" style="font-weight: 600">E-mail</label>
+                <input id="email" type="email" value="ines.garnier@exemple.fr" autocomplete="email" style="min-height: 52px; padding: 0 16px; background: #FFFFFF; border: 1px solid #B9B5AC; border-radius: 6px; color: #1E1F22; font: inherit; font-size: 17px">
+              </div>
+            </div>
+            <span style="font-size: 14px; color: #5C5F66">Nous l'utilisons uniquement pour la confirmation et un éventuel changement d'horaire.</span>
+          </fieldset>
+
+          <label for="cgv" style="display: flex; gap: 12px; align-items: flex-start; padding: 16px; border: 1px solid #D9D6CF; border-radius: 6px; background: #FFFFFF; font-size: 15px; color: #3F4148; cursor: pointer">
+            <input id="cgv" type="checkbox" checked="" style="width: 20px; height: 20px; margin: 2px 0 0; accent-color: #2F4BFF; flex: none">
+            J'ai compris qu'une annulation faite moins de 24 h avant le début sera classée « tardive ».
+          </label>
+        </form>
+
+        <aside aria-labelledby="titre-recap" style="flex: 1 1 380px; min-width: 0; max-width: 460px; border: 1px solid #B9B5AC; border-radius: 8px; background: #FFFFFF; overflow: hidden">
+          <div style="padding: 24px 28px; border-bottom: 1px solid #D9D6CF; background: #E9E6DF">
+            <p style="margin: 0 0 6px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.12em; color: #66696F">DOSSIER N° 01</p>
+            <h2 id="titre-recap" style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 30px">Le Cabinet des Ombres</h2>
+          </div>
+          <dl style="margin: 0; padding: 20px 28px; display: grid; grid-template-columns: auto 1fr; gap: 14px 20px; font-size: 15px">
+            <dt style="color: #5C5F66">Date</dt><dd style="margin: 0; font-weight: 600; text-align: right">Mardi 24 novembre 2026</dd>
+            <dt style="color: #5C5F66">Horaire</dt><dd style="margin: 0; font-weight: 600; text-align: right; font-family: 'IBM Plex Mono', monospace">20 h 00 – 21 h 00</dd>
+            <dt style="color: #5C5F66">Durée</dt><dd style="margin: 0; text-align: right">60 min</dd>
+            <dt style="color: #5C5F66">Groupe</dt><dd style="margin: 0; text-align: right">Les Feux Follets</dd>
+            <dt style="color: #5C5F66">Joueurs</dt><dd style="margin: 0; text-align: right">{{joueurs}} sur 6 max.</dd>
+            <dt style="color: #5C5F66">Accueil</dt><dd style="margin: 0; text-align: right">dès 19 h 45</dd>
+          </dl>
+          <div style="margin: 0 28px; padding: 14px 16px; border: 1px solid #D9D6CF; border-radius: 6px; display: flex; gap: 12px; font-size: 14px; color: #3F4148">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2F4BFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z M9 12l2 2 4-4"></path></svg>
+            <span>Annulation <strong style="color: #1E1F22">sans frais</strong> jusqu'au <strong style="color: #1E1F22">lundi 23 novembre, 20 h 00</strong>. Ensuite, elle sera classée <strong style="color: #1E1F22">tardive</strong>.</span>
+          </div>
+          <div style="padding: 24px 28px 28px">
+            <button type="button" onClick="{{confirmer}}" style="width: 100%; min-height: 56px; display: flex; align-items: center; justify-content: center; gap: 10px; background: #2F4BFF; color: #FFFFFF; border: 0; border-radius: 6px; font: inherit; font-weight: 600; font-size: 17px; cursor: pointer">
+              Confirmer la réservation
+            </button>
+            <p style="margin: 12px 0 0; font-size: 13px; color: #5C5F66; text-align: center">Aucun paiement. Le créneau est bloqué dès la confirmation.</p>
+          </div>
+        </aside>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isDone}}" hint-placeholder-val="{{ false }}">
+      <section aria-labelledby="titre-ok" style="max-width: 760px; margin: 24px auto 0; border: 1px solid #B9B5AC; border-radius: 8px; background: #FFFFFF; overflow: hidden">
+        <div style="padding: 40px 40px 32px; text-align: center; border-bottom: 1px solid #D9D6CF">
+          <div aria-hidden="true" style="width: 72px; height: 72px; margin: 0 auto 20px; border-radius: 50%; border: 1px solid #2F4BFF; display: flex; align-items: center; justify-content: center">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#2F4BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"></path></svg>
+          </div>
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border: 1px solid #1B5E3F; border-radius: 999px; color: #1B5E3F; font-size: 13px; font-weight: 600; letter-spacing: 0.08em">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"></path></svg>
+            CONFIRMÉE
+          </span>
+          <h1 id="titre-ok" style="margin: 16px 0 8px; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 46px; line-height: 1.05">La salle vous attend.</h1>
+          <p style="margin: 0; color: #3F4148; font-size: 17px">Un récapitulatif a été envoyé à ines.garnier@exemple.fr.</p>
+        </div>
+        <dl style="margin: 0; padding: 28px 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; font-size: 15px">
+          <div><dt style="color: #5C5F66; font-size: 13px">Référence</dt><dd style="margin: 4px 0 0; font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 18px">AO-2411-0420</dd></div>
+          <div><dt style="color: #5C5F66; font-size: 13px">Salle</dt><dd style="margin: 4px 0 0; font-weight: 600">Le Cabinet des Ombres</dd></div>
+          <div><dt style="color: #5C5F66; font-size: 13px">Créneau</dt><dd style="margin: 4px 0 0; font-weight: 600">Mar. 24 nov. · 20 h 00 – 21 h 00</dd></div>
+          <div><dt style="color: #5C5F66; font-size: 13px">Groupe</dt><dd style="margin: 4px 0 0; font-weight: 600">Les Feux Follets · {{joueurs}} joueurs</dd></div>
+        </dl>
+        <div style="padding: 0 40px 36px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center">
+          <a href="Main.dc.html" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border: 1px solid #B9B5AC; border-radius: 6px; color: #1E1F22; text-decoration: none">Retour aux salles</a>
+          <button type="button" onClick="{{retour}}" style="min-height: 48px; padding: 0 22px; background: transparent; border: 1px solid #B9B5AC; border-radius: 6px; color: #2F4BFF; font: inherit; cursor: pointer">Modifier la réservation</button>
+        </div>
+        <p style="margin: 0; padding: 16px 40px; border-top: 1px solid #D9D6CF; font-size: 14px; color: #5C5F66; text-align: center">Annulation sans frais possible jusqu'au lundi 23 novembre, 20 h 00.</p>
+      </section>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"etape":{"editor":"enum","options":["formulaire","confirmation"],"default":"formulaire"},"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { joueurs: 5, done: null };
+  }
+  renderVals() {
+    const j = this.state.joueurs;
+    const done = this.state.done !== null ? this.state.done : (this.props.etape ?? 'formulaire') === 'confirmation';
+    const on = 'color: #1E1F22; font-weight: 600';
+    const off = 'color: #5C5F66; font-weight: 400';
+    return {
+      joueurs: j,
+      minAtteint: j <= 2, maxAtteint: j >= 6,
+      capaciteMsg: j >= 6 ? 'Maximum atteint : 6 joueurs pour cette salle.' : (j <= 2 ? 'Minimum : 2 joueurs.' : 'Cette salle accueille de 2 à 6 joueurs.'),
+      moins: () => this.setState({ joueurs: Math.max(2, j - 1) }),
+      plus: () => this.setState({ joueurs: Math.min(6, j + 1) }),
+      isForm: !done, isDone: done,
+      step2: done ? off : on,
+      step3: done ? on : off,
+      confirmer: () => this.setState({ done: true }),
+      retour: () => this.setState({ done: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

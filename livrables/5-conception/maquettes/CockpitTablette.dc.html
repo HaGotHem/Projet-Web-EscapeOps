@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Cockpit tablette — EscapeOps</title>
+<script src="./_runtime/react.js"></script>
+<script src="./_runtime/react-dom.js"></script>
+<script src="./_runtime/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#F5F3EF}
+a{color:#24324D}a:hover{color:#111A2C}
+</style>
+</helmet>
+<div style="width: 820px; height: 1180px; box-sizing: border-box; display: flex; flex-direction: column; background: #F5F3EF; color: #1C1915; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.45; overflow: hidden">
+
+  <header style="background: #1C1915; color: #E9E3D8; padding: 16px 24px 0">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <svg width="28" height="28" viewBox="0 0 36 36" fill="none" stroke="#C9A15A" stroke-width="1.6" aria-hidden="true"><circle cx="18" cy="18" r="16"></circle><circle cx="18" cy="18" r="11"></circle><path d="M18 12a3 3 0 0 1 1.6 5.5L21 24h-6l1.4-6.5A3 3 0 0 1 18 12z"></path></svg>
+        <span style="font-weight: 700; font-size: 17px">EscapeOps</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px">
+        <span style="font-size: 14px; color: #B5AC9E">Lun. 23 nov.</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 17px; color: #FFFFFF">16 h 00</span>
+        <span aria-label="Camille Roux, responsable" style="width: 36px; height: 36px; border-radius: 50%; background: #C9A15A; color: #1C1915; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px">CR</span>
+      </div>
+    </div>
+    <nav aria-label="Navigation" style="display: flex; gap: 4px; margin-top: 14px">
+      <a href="Cockpit.dc.html" aria-current="page" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 16px; color: #FFFFFF; font-weight: 600; text-decoration: none; box-shadow: inset 0 -3px 0 #C9A15A">Cockpit</a>
+      <a href="Session.dc.html" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 16px; color: #D6CFC3; text-decoration: none">Sessions</a>
+      <a href="SalleResponsable.dc.html" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 16px; color: #D6CFC3; text-decoration: none">Salles</a>
+      <a href="Incident.dc.html" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 16px; color: #D6CFC3; text-decoration: none">Incidents <span style="min-width: 22px; height: 22px; border-radius: 11px; background: #E9B4AF; color: #5C1410; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center">1</span></a>
+    </nav>
+  </header>
+
+  <main style="flex: 1 1 auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; overflow: hidden">
+
+    <!-- Alerte -->
+    <section aria-labelledby="t-alerte" style="background: #FFF8F7; border: 1px solid #E9B4AF; border-left: 0; box-shadow: inset 4px 0 0 #B42318; border-radius: 8px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: center; gap: 8px; color: #8E1F1A">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0 M5.6 5.6l12.8 12.8"></path></svg>
+        <h2 id="t-alerte" style="margin: 0; font-size: 16px; font-weight: 700">18 h 00 · Les Lanternes ne peuvent pas démarrer</h2>
+      </div>
+      <p style="margin: 0; color: #3A332B">Aucun game master affecté au Cabinet des Ombres. Hugo Bernard est libre de 17 h 00 à 20 h 30. Un incident critique est aussi ouvert sur la porte secrète.</p>
+      <div style="display: flex; gap: 10px">
+        <a href="Session.dc.html" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 18px; background: #24324D; color: #FFFFFF; border-radius: 6px; text-decoration: none; font-weight: 600">Affecter un game master</a>
+        <a href="Incident.dc.html" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 18px; border: 1px solid #A8A091; color: #1C1915; border-radius: 6px; text-decoration: none; font-weight: 600">Voir l'incident</a>
+      </div>
+    </section>
+
+    <!-- Sessions -->
+    <section aria-labelledby="t-sess" style="background: #FFFFFF; border: 1px solid #DDD7CD; border-radius: 8px; overflow: hidden">
+      <h2 id="t-sess" style="margin: 0; padding: 12px 18px; font-size: 16px; font-weight: 600; border-bottom: 1px solid #ECE7DF">Sessions du jour</h2>
+      <ul style="list-style: none; margin: 0; padding: 0">
+        <sc-for list="{{sessions}}" as="s" hint-placeholder-count="7">
+          <li style="border-bottom: 1px solid #ECE7DF">
+            <a href="Session.dc.html" style="display: grid; grid-template-columns: 112px minmax(0, 1fr) auto; align-items: center; gap: 14px; min-height: 64px; padding: 8px 18px; color: #1C1915; text-decoration: none; {{s.rowTone}}">
+              <span style="font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 15px; line-height: 1.3">{{s.debut}}<br><span style="color: #5E574D; font-weight: 400; font-size: 13px">→ {{s.fin}}</span></span>
+              <span style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+                <span><strong>{{s.groupe}}</strong> <span style="color: #5E574D">· {{s.salle}}</span></span>
+                <span style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13px">
+                  <span style="display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px 2px 7px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; {{s.etat.tone}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{s.etat.d}}"></path></svg>{{s.etat.label}}</span>
+                  <sc-if value="{{s.tardive}}" hint-placeholder-val="{{ false }}">
+                    <span style="display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px 2px 7px; border-radius: 4px; background: #FDF0E0; color: #8A4500; border: 1px solid #F0C38E; font-size: 11px; font-weight: 700; letter-spacing: 0.06em"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0 M12 7v5l3 2"></path></svg>TARDIVE</span>
+                  </sc-if>
+                  <span style="{{s.gmTone}}">{{s.gm}}</span>
+                </span>
+              </span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5E574D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+            </a>
+          </li>
+        </sc-for>
+      </ul>
+    </section>
+
+    <!-- Salles -->
+    <section aria-labelledby="t-salles">
+      <h2 id="t-salles" style="margin: 0 0 10px; font-size: 16px; font-weight: 600">Salles et maintenance</h2>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+        <sc-for list="{{rooms}}" as="r" hint-placeholder-count="3">
+          <a href="SalleResponsable.dc.html" style="display: flex; flex-direction: column; gap: 8px; padding: 14px; background: #FFFFFF; border: 1px solid #DDD7CD; border-radius: 8px; color: #1C1915; text-decoration: none; {{r.cardTone}}">
+            <span style="font-weight: 600; font-size: 14px; line-height: 1.3">{{r.name}}</span>
+            <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; {{r.dispoTone}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.dispoIcon}}"></path></svg>{{r.dispo}}</span>
+            <span style="display: flex; align-items: baseline; gap: 6px; margin-top: 2px">
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 26px; font-weight: 600; {{r.countTone}}">{{r.count}}/10</span>
+              <span style="font-size: 12px; color: #5E574D">sessions depuis le contrôle</span>
+            </span>
+            <sc-if value="{{r.alerte}}" hint-placeholder-val="{{ false }}">
+              <span style="align-self: flex-start; display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px 2px 7px; border-radius: 4px; background: #F1EBFA; color: #5B3297; border: 1px solid #CDB8EC; font-size: 11px; font-weight: 700; letter-spacing: 0.05em"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"></path></svg>CONTRÔLE À PRÉVOIR</span>
+            </sc-if>
+            <sc-if value="{{r.note}}" hint-placeholder-val="{{ false }}">
+              <span style="font-size: 12px; color: #5B3297">{{r.note}}</span>
+            </sc-if>
+          </a>
+        </sc-for>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":820,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const E = {
+      PREVUE: { label: 'PRÉVUE', d: 'M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4', tone: 'background: #EEF1F6; color: #2E3B55; border: 1px solid #C3CCDB;' },
+      PRETE: { label: 'PRÊTE', d: 'M5 12l4 4 10-10', tone: 'background: #E3F2EA; color: #1B5E3F; border: 1px solid #A9D4BC;' },
+      EN_COURS: { label: 'EN COURS', d: 'M8 5v14l11-7z', tone: 'background: #24324D; color: #FFFFFF; border: 1px solid #24324D;' },
+      TERMINEE: { label: 'TERMINÉE', d: 'M5 21V4h11l-2 4 2 4H5', tone: 'background: #EFEDE9; color: #4A443C; border: 1px solid #D4CEC4;' },
+      ANNULEE: { label: 'ANNULÉE', d: 'M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0 M9 9l6 6 M15 9l-6 6', tone: 'background: #FBEDEC; color: #8E1F1A; border: 1px solid #E9B4AF;' }
+    };
+    const S = (debut, fin, groupe, salle, etat, gm, extra) => Object.assign({ debut: debut, fin: fin, groupe: groupe, salle: salle, etat: E[etat], gm: gm, gmTone: 'color: #5E574D;', tardive: false, rowTone: '' }, extra || {});
+    return {
+      sessions: [
+        S('14 h 00', '15 h 00', 'Les Pipelettes', 'Cabinet', 'TERMINEE', 'Hugo Bernard'),
+        S('16 h 00', '17 h 00', 'Famille Duval', 'Crypte', 'EN_COURS', 'Hugo Bernard'),
+        S('16 h 30', '17 h 30', 'Les Vagabonds', 'Cabinet', 'ANNULEE', 'Créneau libéré', { tardive: true }),
+        S('16 h 30', '17 h 45', 'Team Archimède', 'Laboratoire', 'PRETE', 'Léa Martin'),
+        S('18 h 00', '19 h 00', 'Les Lanternes', 'Cabinet', 'PREVUE', 'Aucun game master', { gmTone: 'color: #8E1F1A; font-weight: 700;', rowTone: 'background: #FFF8F7; box-shadow: inset 4px 0 0 #B42318;' }),
+        S('18 h 00', '19 h 00', 'Les Insomniaques', 'Crypte', 'PREVUE', 'Léa Martin'),
+        S('20 h 30', '21 h 45', 'Collectif Minuit', 'Laboratoire', 'PREVUE', 'Hugo Bernard')
+      ],
+      rooms: [
+        { name: 'Le Cabinet des Ombres', dispo: 'Bloquée — incident', dispoTone: 'color: #8E1F1A;', dispoIcon: 'M12 3l10 18H2z M12 10v5 M12 18v.01', count: 6, countTone: 'color: #1C1915;', alerte: false, note: '', cardTone: '' },
+        { name: "La Crypte de l'Archiviste", dispo: "Occupée → 17 h 00", dispoTone: 'color: #24324D;', dispoIcon: 'M8 5v14l11-7z', count: 9, countTone: 'color: #1C1915;', alerte: false, note: '10/10 à la fin de la session en cours', cardTone: '' },
+        { name: 'Le Laboratoire Interdit', dispo: 'Libre', dispoTone: 'color: #1B5E3F;', dispoIcon: 'M5 12l4 4 10-10', count: 10, countTone: 'color: #5B3297;', alerte: true, note: '', cardTone: 'border-color: #CDB8EC;' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

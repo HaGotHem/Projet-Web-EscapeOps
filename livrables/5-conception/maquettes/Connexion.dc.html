@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Connexion — EscapeOps</title>
+<script src="./_runtime/react.js"></script>
+<script src="./_runtime/react-dom.js"></script>
+<script src="./_runtime/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#F5F3EF}
+a{color:#24324D}a:hover{color:#111A2C}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #24324D;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; background: #F5F3EF; color: #1C1915; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 16px; line-height: 1.5">
+
+  <section aria-hidden="true" style="flex: 1 1 480px; min-height: 280px; background: #F2F0EB; border-right: 1px solid #D9D6CF; color: #1E1F22; padding: 48px clamp(24px, 5vw, 72px); box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; gap: 40px">
+    <div style="display: flex; align-items: center; gap: 12px">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#2F4BFF" stroke-width="1.5"><circle cx="18" cy="18" r="16"></circle><circle cx="18" cy="18" r="11"></circle><path d="M18 12a3 3 0 0 1 1.6 5.5L21 24h-6l1.4-6.5A3 3 0 0 1 18 12z"></path></svg>
+      <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 600">Les Archives Obscures</span>
+    </div>
+    <div>
+      <p style="margin: 0 0 16px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.14em; color: #2F4BFF">ESCAPEOPS · ESPACE ÉQUIPE</p>
+      <p style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: clamp(36px, 4vw, 56px); line-height: 1.08; max-width: 16ch">Personne ne réserve une salle indisponible.</p>
+      <p style="margin: 20px 0 0; font-size: 17px; color: #3F4148; max-width: 44ch">Et toute l'équipe sait pourquoi une session peut — ou ne peut pas — démarrer.</p>
+    </div>
+    <div style="display: flex; gap: 24px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.1em; color: #66696F">
+      <span>3 SALLES</span><span>·</span><span>SESSIONS</span><span>·</span><span>MAINTENANCE</span>
+    </div>
+  </section>
+
+  <main style="flex: 1 1 480px; display: flex; align-items: center; justify-content: center; padding: 48px 24px; box-sizing: border-box">
+    <div style="width: 100%; max-width: 420px">
+      <h1 style="margin: 0 0 8px; font-size: 30px; font-weight: 600; letter-spacing: -0.01em">Connexion</h1>
+      <p style="margin: 0 0 32px; color: #5E574D">Accès réservé au personnel des Archives Obscures.</p>
+
+      <sc-if value="{{erreur}}" hint-placeholder-val="{{ false }}">
+        <div role="alert" style="display: flex; gap: 12px; padding: 14px 16px; margin-bottom: 24px; background: #FBEDEC; border: 1px solid #E3A7A2; border-radius: 6px; color: #7F1D1D; font-size: 15px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M12 3l10 18H2z M12 10v5 M12 18v.01"></path></svg>
+          <span><strong>E-mail ou mot de passe non reconnu.</strong> Vérifiez votre saisie. Si vous avez oublié votre mot de passe, l'administrateur peut le réinitialiser.</span>
+        </div>
+      </sc-if>
+
+      <form style="display: flex; flex-direction: column; gap: 20px">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <label for="email" style="font-weight: 600; font-size: 15px">E-mail professionnel</label>
+          <input id="email" type="email" value="camille.roux@archives-obscures.example" autocomplete="username" style="min-height: 48px; padding: 0 14px; background: #FFFFFF; border: 1px solid #A8A091; border-radius: 6px; color: #1C1915; font: inherit">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; justify-content: space-between; align-items: baseline">
+            <label for="mdp" style="font-weight: 600; font-size: 15px">Mot de passe</label>
+            <a href="#oubli" style="font-size: 14px">Mot de passe oublié ?</a>
+          </div>
+          <input id="mdp" type="password" value="••••••••••••" autocomplete="current-password" style="min-height: 48px; padding: 0 14px; background: #FFFFFF; border: 1px solid #A8A091; border-radius: 6px; color: #1C1915; font: inherit; letter-spacing: 0.1em">
+        </div>
+        <a href="Cockpit.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 52px; margin-top: 8px; background: #24324D; color: #FFFFFF; border-radius: 6px; font-weight: 600; text-decoration: none">Se connecter</a>
+      </form>
+
+      <div style="margin-top: 32px; padding: 16px; border: 1px solid #DDD7CD; border-radius: 6px; background: #FFFFFF; display: flex; gap: 12px; font-size: 14px; color: #5E574D">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#24324D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0 M12 16v-4 M12 8h.01"></path></svg>
+        <span>Pas besoin de choisir un rôle : il est lié à votre compte. Après connexion, vous arrivez sur votre espace — <strong style="color: #1C1915">cockpit</strong> (responsable), <strong style="color: #1C1915">mes sessions</strong> (game master) ou <strong style="color: #1C1915">comptes</strong> (administrateur).</span>
+      </div>
+
+      <p style="margin: 28px 0 0; font-size: 14px"><a href="Main.dc.html">← Retour au site public</a></p>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"erreur":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { erreur: this.props.erreur ?? false };
+  }
+}
+</script>
+</body>
+</html>

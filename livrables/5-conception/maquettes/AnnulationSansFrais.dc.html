@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Annuler la réservation — E7</title>
+<script src="./_runtime/react.js"></script>
+<script src="./_runtime/react-dom.js"></script>
+<script src="./_runtime/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="position: relative; width: 1440px; height: 1000px; overflow: hidden; background: #F5F3EF; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #1C1915; font-size: 15px; line-height: 1.45">
+
+  <div aria-hidden="true" style="position: absolute; inset: 0">
+    <dc-import name="Session" variante="{{sessionVariante}}" hint-size="1440px,1560px"></dc-import>
+  </div>
+  <div aria-hidden="true" style="position: absolute; inset: 0; background: rgba(28, 25, 21, 0.62)"></div>
+
+  <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 24px">
+    <section role="dialog" aria-modal="true" aria-labelledby="dlg-titre" aria-describedby="dlg-verdict" style="width: 600px; max-width: 100%; background: #FFFFFF; border-radius: 10px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35); overflow: hidden">
+
+      <header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 22px 24px 16px">
+        <div>
+          <h2 id="dlg-titre" style="margin: 0; font-size: 22px; font-weight: 600">Annuler la réservation ?</h2>
+          <p style="margin: 6px 0 0; color: #5E574D">{{v.groupe}} · Le Cabinet des Ombres · <span style="font-family: 'IBM Plex Mono', monospace; font-weight: 600; color: #1C1915">{{v.quand}}</span></p>
+        </div>
+        <button type="button" aria-label="Fermer sans annuler" style="width: 44px; height: 44px; flex: none; display: inline-flex; align-items: center; justify-content: center; background: transparent; border: 0; border-radius: 6px; color: #5E574D; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12 M18 6L6 18"></path></svg></button>
+      </header>
+
+      <!-- Verdict E7 annoncé à l'avance -->
+      <div id="dlg-verdict" style="margin: 0 24px; border-radius: 8px; padding: 18px; {{v.boxTone}}">
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px 4px 10px; border-radius: 4px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; {{v.badgeTone}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{v.icon}}"></path></svg>{{v.badge}}</span>
+          <h3 style="margin: 0; font-size: 18px; font-weight: 700; {{v.titreTone}}">{{v.titre}}</h3>
+        </div>
+        <p style="margin: 10px 0 0">{{v.explication}}</p>
+
+        <!-- Frise : seuil des 24 h -->
+        <div aria-hidden="true" style="margin-top: 18px">
+          <div style="position: relative; height: 34px">
+            <span style="position: absolute; bottom: 0; left: {{v.marker}}; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; font-size: 12px; font-weight: 700; white-space: nowrap; color: #1C1915">
+              Maintenant · {{v.now}}
+              <svg width="12" height="8" viewBox="0 0 12 8"><path d="M0 0h12L6 8z" fill="#1C1915"></path></svg>
+            </span>
+          </div>
+          <div style="display: flex; height: 14px; border-radius: 3px; overflow: hidden; border: 1px solid #D4CEC4">
+            <span style="flex: 1 1 50%; background: #CBE6E8"></span>
+            <span style="flex: 1 1 50%; background: repeating-linear-gradient(135deg, #F7D9B5 0, #F7D9B5 5px, #FCEBD6 5px, #FCEBD6 10px)"></span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 6px; font-size: 12px; color: #3A332B">
+            <span style="display: flex; flex-direction: column"><strong style="color: #135E66">Sans frais</strong></span>
+            <span style="display: flex; justify-content: space-between; gap: 8px; border-left: 2px solid #1C1915; padding-left: 6px; margin-left: -1px">
+              <span style="display: flex; flex-direction: column"><strong style="color: #8A4500">Tardive · moins de 24 h</strong><span style="font-family: 'IBM Plex Mono', monospace">dès {{v.seuil}}</span></span>
+              <span style="display: flex; flex-direction: column; text-align: right"><strong>Début</strong><span style="font-family: 'IBM Plex Mono', monospace">{{v.debut}}</span></span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <form style="padding: 20px 24px 0; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="motif" style="font-weight: 600; font-size: 14px">Motif <span style="font-weight: 400; color: #5E574D">(facultatif)</span></label>
+          <select id="motif" style="min-height: 44px; padding: 0 12px; border: 1px solid #A8A091; border-radius: 6px; background: #FFFFFF; font: inherit; color: #1C1915">
+            <option>Demande du client</option>
+            <option>Salle indisponible</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <label for="prevenir" style="display: flex; gap: 10px; align-items: center; font-size: 14px; cursor: pointer">
+          <input id="prevenir" type="checkbox" checked="" style="width: 18px; height: 18px; margin: 0; accent-color: #24324D">
+          Prévenir {{v.contact}} par e-mail
+        </label>
+        <p style="margin: 0; padding: 12px 14px; background: #F5F3EF; border-radius: 6px; font-size: 13px; color: #3A332B; display: flex; gap: 10px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 2px"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6"></path></svg>
+          <span>Le statut <strong>{{v.badge}}</strong> restera affiché sur la réservation, pour vous comme pour le client. Le créneau sera de nouveau proposé sur la vitrine.</span>
+        </p>
+      </form>
+
+      <footer style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; padding: 20px 24px 24px">
+        <button type="button" style="min-height: 48px; padding: 0 18px; background: #FFFFFF; border: 1px solid #A8A091; border-radius: 6px; font: inherit; font-weight: 600; color: #1C1915; cursor: pointer">Garder la réservation</button>
+        <button type="button" style="min-height: 48px; padding: 0 18px; background: #B42318; border: 1px solid #B42318; border-radius: 6px; font: inherit; font-weight: 600; color: #FFFFFF; cursor: pointer">{{v.cta}}</button>
+      </footer>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"variante":{"editor":"enum","options":["sansfrais","tardive"],"default":"sansfrais"},"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const tardive = (this.props.variante ?? 'sansfrais') === 'tardive';
+    const v = tardive ? {
+      groupe: 'Les Lanternes', quand: 'lun. 23 nov. · 18 h 00', contact: 'Maxime Lefèvre',
+      badge: 'TARDIVE', titre: 'Annulation tardive',
+      icon: 'M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0 M12 7v5l3 2',
+      explication: "La session commence dans 2 h. L'annulation est faite moins de 24 h avant le début : elle sera classée TARDIVE.",
+      boxTone: 'background: #FFFAF3; border: 1px solid #F0C38E;',
+      badgeTone: 'background: #FDF0E0; color: #8A4500; border: 1px solid #F0C38E;',
+      titreTone: 'color: #8A4500;',
+      marker: '92%', now: 'lun. 16 h 00', seuil: 'dim. 22 nov. 18 h 00', debut: 'lun. 23 nov. 18 h 00',
+      cta: "Confirmer l'annulation tardive", session: 'normale'
+    } : {
+      groupe: 'Les Cartographes', quand: 'mar. 24 nov. · 18 h 00', contact: 'Nora Benali',
+      badge: 'SANS FRAIS', titre: 'Annulation sans frais',
+      icon: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z M9 12l2 2 4-4',
+      explication: "La session commence dans 26 h. L'annulation est faite au moins 24 h avant le début : elle sera classée SANS FRAIS.",
+      boxTone: 'background: #F4FAFA; border: 1px solid #9FCFD4;',
+      badgeTone: 'background: #E6F3F4; color: #135E66; border: 1px solid #9FCFD4;',
+      titreTone: 'color: #135E66;',
+      marker: '46%', now: 'lun. 16 h 00', seuil: 'lun. 23 nov. 18 h 00', debut: 'mar. 24 nov. 18 h 00',
+      cta: "Confirmer l'annulation sans frais", session: 'demain'
+    };
+    return { v: v, sessionVariante: v.session };
+  }
+}
+</script>
+</body>
+</html>
