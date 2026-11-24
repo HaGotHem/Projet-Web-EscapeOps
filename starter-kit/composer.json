@@ -18,6 +18,9 @@
   },
   "scripts": {
     "serve": "php -S 127.0.0.1:8080 -t public public/router.php",
-    "test": "php tests/http-input.php"
+    "test": [
+      "php tests/http-input.php",
+      "php tests/regles-s4-s5.php"
+    ]
   }
 }

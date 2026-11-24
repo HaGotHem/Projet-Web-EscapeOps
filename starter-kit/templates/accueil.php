@@ -16,59 +16,11 @@ $nbSalles = count($salles);
 $joueursMin = $salles ? min(array_column($salles, 'capacite_min')) : 0;
 $joueursMax = $salles ? max(array_column($salles, 'capacite_max')) : 0;
 ?>
-<!doctype html>
-<html lang="fr">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Les Archives Obscures — Escape games</title>
-
-    <!-- Polices de la maquette -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
-
-    <!-- Tailwind v4, version navigateur (version figée) -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.1.11"></script>
-
-    <!-- Couleurs et polices de la maquette, déclarées comme thème Tailwind -->
-    <style type="text/tailwindcss">
-        @theme {
-            --color-fond: #F2F0EB;
-            --color-papier: #FFFFFF;
-            --color-papier-gris: #E9E6DF;
-            --color-encre: #1E1F22;
-            --color-texte: #3F4148;
-            --color-texte-doux: #5C5F66;
-            --color-texte-pale: #66696F;
-            --color-trait: #D9D6CF;
-            --color-trait-fort: #B9B5AC;
-            --color-trait-pris: #BDBAB2;
-            --color-accent: #2F4BFF;
-            --color-accent-fonce: #1F33C7;
-
-            --font-serif: 'Cormorant Garamond', Georgia, serif;
-            --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
-            --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-        }
-    </style>
-</head>
-<body class="bg-fond text-encre font-sans text-base leading-relaxed">
-
-<!-- En-tête -->
-<header class="border-b border-trait">
-    <div class="max-w-7xl mx-auto px-4 md:px-12 py-5 flex flex-wrap items-center justify-between gap-4">
-        <a href="/" class="flex items-center gap-3 text-encre no-underline">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#2F4BFF" stroke-width="1.5" aria-hidden="true"><circle cx="18" cy="18" r="16"></circle><circle cx="18" cy="18" r="11"></circle><path d="M18 12a3 3 0 0 1 1.6 5.5L21 24h-6l1.4-6.5A3 3 0 0 1 18 12z"></path></svg>
-            <span class="font-serif text-2xl font-semibold">Les Archives Obscures</span>
-        </a>
-        <nav aria-label="Navigation principale" class="flex flex-wrap items-center gap-7 text-[15px]">
-            <a href="#salles" class="text-encre hover:underline">Les salles</a>
-            <a href="#fonctionnement" class="text-encre hover:underline">Comment ça marche</a>
-            <a href="#infos" class="text-encre hover:underline">Infos pratiques</a>
-        </nav>
-    </div>
-</header>
+<?php
+$titre = 'Les Archives Obscures — Escape games';
+require __DIR__ . '/partials/tete.php';
+require __DIR__ . '/partials/entete-public.php';
+?>
 
 <main>
     <!-- Accroche -->
@@ -171,7 +123,7 @@ $joueursMax = $salles ? max(array_column($salles, 'capacite_max')) : 0;
                                     <?php foreach ($salle['creneaux'] as $c): ?>
                                         <li>
                                             <?php if ($c['libre']): ?>
-                                                <div class="flex flex-col gap-0.5 min-h-11 px-3 py-2 border border-accent rounded">
+                                                <a href="/reserver/<?= (int) $c['id'] ?>" class="flex flex-col gap-0.5 min-h-11 px-3 py-2 border border-accent rounded text-encre no-underline hover:bg-[#F5F6FF]">
                                                     <span class="text-[13px] text-texte"><?= $e($c['jour']) ?></span>
                                                     <span class="flex items-center justify-between gap-1.5 font-mono font-semibold text-[15px]">
                                                         <?= $e($c['heure']) ?>
@@ -179,7 +131,7 @@ $joueursMax = $salles ? max(array_column($salles, 'capacite_max')) : 0;
                                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"></path></svg>Libre
                                                         </span>
                                                     </span>
-                                                </div>
+                                                </a>
                                             <?php else: ?>
                                                 <div class="flex flex-col gap-0.5 min-h-11 px-3 py-2 border border-dashed border-trait-pris rounded text-texte-pale">
                                                     <span class="text-[13px]"><?= $e($c['jour']) ?></span>
@@ -227,16 +179,4 @@ $joueursMax = $salles ? max(array_column($salles, 'capacite_max')) : 0;
     </section>
 </main>
 
-<!-- Pied de page -->
-<footer id="infos">
-    <div class="max-w-7xl mx-auto px-4 md:px-12 py-12 flex flex-wrap justify-between gap-6 text-sm text-texte-doux">
-        <div>
-            <p class="mb-1.5 font-serif text-[22px] text-encre">Les Archives Obscures</p>
-            <p>[ADRESSE] · [TÉLÉPHONE] · contact@archives-obscures.example</p>
-        </div>
-        <p class="self-end">Ouvert du mardi au dimanche · Sessions de 14 h 00 à 22 h 00</p>
-    </div>
-</footer>
-
-</body>
-</html>
+<?php require __DIR__ . '/partials/pied-public.php'; ?>

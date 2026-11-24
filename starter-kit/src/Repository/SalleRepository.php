@@ -32,6 +32,7 @@ final class SalleRepository
                 'duree_jeu_min',
                 'capacite_min',
                 'capacite_max',
+                'remise_etat_min',
             ],
             ['ORDER' => ['id_salle' => 'ASC']]
         );

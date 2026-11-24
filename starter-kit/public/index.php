@@ -2,10 +2,20 @@
 
 declare(strict_types=1);
 
+use App\Controller\AuthController;
+use App\Controller\EquipeController;
+use App\Controller\ReservationController;
 use App\Controller\VitrineController;
 use App\Database\DatabaseFactory;
+use App\Http\RoleMiddleware;
 use App\Http\ViewRenderer;
+use App\Repository\ReservationRepository;
 use App\Repository\SalleRepository;
+use App\Repository\SessionRepository;
+use App\Repository\UtilisateurRepository;
+use App\Service\AuthService;
+use App\Service\ReservationService;
+use App\Service\SessionService;
 use App\Service\VitrineService;
 use Dotenv\Dotenv;
 use Slim\Factory\AppFactory;
@@ -18,12 +28,54 @@ Dotenv::createImmutable($root)->safeLoad();
 
 $settings = require $root . '/config/settings.php';
 
+// Session PHP pour les pages HTML (connexion, rôles, jeton CSRF).
+// L'API JSON n'en a pas besoin : elle ne lit pas la session.
+$chemin = (string) parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+if (!str_starts_with($chemin, '/api/')) {
+    session_set_cookie_params([
+        'path' => '/',
+        'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off', // cookie envoyé seulement en HTTPS quand le site est en HTTPS
+        'httponly' => true,  // JavaScript ne peut pas lire le cookie (limite le vol de session par XSS)
+        'samesite' => 'Lax', // le cookie n'accompagne pas les POST venant d'un autre site (limite le CSRF)
+    ]);
+    session_start();
+}
+
 $app = AppFactory::create();
 
 $database = DatabaseFactory::create($settings['database']);
 $renderer = new ViewRenderer($root . '/templates');
 
-$controller = new VitrineController(new VitrineService(new SalleRepository($database)), $renderer);
+// Repositories (accès aux données)
+$salles = new SalleRepository($database);
+$utilisateurs = new UtilisateurRepository($database);
+
+// Services (règles métier)
+$auth = new AuthService($utilisateurs);
+
+// Contrôleurs
+$controller = new VitrineController(new VitrineService($salles), $renderer);
+$controleurs = [
+    'vitrine' => $controller,
+    'auth' => new AuthController($auth, $renderer),
+    'equipe' => new EquipeController(
+        new SessionService(new SessionRepository($database), $salles),
+        $utilisateurs,
+        $renderer
+    ),
+    'reservation' => new ReservationController(
+        new ReservationService(new ReservationRepository($database)),
+        $renderer
+    ),
+];
+
+// Fabrique de middlewares de contrôle d'accès : $role(['RESPONSABLE']) protège un groupe de routes
+$role = static fn (array $roles): RoleMiddleware => new RoleMiddleware(
+    $auth,
+    $renderer,
+    $app->getResponseFactory(),
+    $roles
+);
 
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
@@ -33,7 +85,7 @@ $app->addErrorMiddleware(
     true
 );
 
-(require $root . '/routes/web.php')($app, $controller);
+(require $root . '/routes/web.php')($app, $controleurs, $role);
 (require $root . '/routes/api.php')($app, $controller);
 
 $app->run();

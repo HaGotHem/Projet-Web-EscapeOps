@@ -15,7 +15,7 @@ use DateTimeImmutable;
 final class VitrineService
 {
     /** Nombre de créneaux montrés par salle sur la page d'accueil (maquette Main). */
-    private const CRENEAUX_PAR_SALLE = 4;
+    private const CRENEAUX_PAR_SALLE = 12;
 
     private const JOURS = [
         1 => 'Lun.', 2 => 'Mar.', 3 => 'Mer.', 4 => 'Jeu.',

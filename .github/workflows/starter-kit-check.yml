@@ -102,6 +102,52 @@ jobs:
           code=$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/page-inexistante)
           test "$code" = "404"
 
+      - name: Tester connexion, rôles et réservation (S4, S5)
+        run: |
+          B=http://127.0.0.1:8080
+          MDP=demo-escapeops-2026
+          # code HTTP d'une requête ; la page reçue est gardée dans /tmp/r.html
+          code() { curl -sS -o /tmp/r.html -w '%{http_code}' "$@"; }
+          # jeton CSRF de la dernière page reçue
+          jeton() { grep -o 'name="csrf" value="[a-f0-9]*"' /tmp/r.html | head -1 | sed 's/.*value="//;s/"//'; }
+
+          # --- S4 : connexion ---
+          test "$(code -c r.jar -b r.jar $B/connexion)" = "200"; T=$(jeton)
+          test "$(code -c r.jar -b r.jar -d "email=camille.roux@archives-obscures.example&mot_de_passe=$MDP" $B/connexion)" = "403"   # sans jeton CSRF
+          test "$(code -c r.jar -b r.jar --data-urlencode "csrf=$T" -d 'email=camille.roux@archives-obscures.example&mot_de_passe=faux' $B/connexion)" = "401"
+          test "$(code -c r.jar -b r.jar --data-urlencode "csrf=$T" -d "email=jules.petit@archives-obscures.example&mot_de_passe=$MDP" $B/connexion)" = "401"   # compte désactivé
+          test "$(code $B/responsable/sessions)" = "303"   # pas connecté : renvoyé vers /connexion
+          test "$(code -c r.jar -b r.jar --data-urlencode "csrf=$T" -d "email=camille.roux@archives-obscures.example&mot_de_passe=$MDP" $B/connexion)" = "303"
+
+          # --- S4 : rôles (Camille est responsable) ---
+          test "$(code -c r.jar -b r.jar $B/responsable/sessions)" = "200"; T=$(jeton)
+          test "$(code -c r.jar -b r.jar $B/gm/sessions)" = "403"
+          test "$(code -c r.jar -b r.jar $B/admin/comptes)" = "403"
+
+          # --- S5 : états d'une session ---
+          code -c r.jar -b r.jar --data-urlencode "csrf=$T" -d 'etat=EN_COURS' $B/responsable/sessions/26/etat > /dev/null
+          code -c r.jar -b r.jar $B/responsable/sessions/26 > /dev/null
+          grep -q 'Démarrage impossible' /tmp/r.html   # E5 : pas de démarrage sans game master
+          code -c r.jar -b r.jar --data-urlencode "csrf=$T" -d 'etat=EN_COURS' $B/responsable/sessions/25/etat > /dev/null
+          code -c r.jar -b r.jar $B/responsable/sessions/25 > /dev/null
+          grep -q '>En cours<' /tmp/r.html
+
+          # --- S5 : création d'une session ---
+          D=$(date -d '+5 day' +%Y-%m-%d)
+          test "$(code -c r.jar -b r.jar --data-urlencode "csrf=$T" -d "id_salle=1&debut=${D}T15:00" $B/responsable/sessions)" = "303"
+          test "$(code -c r.jar -b r.jar --data-urlencode "csrf=$T" -d "id_salle=1&debut=${D}T16:05" $B/responsable/sessions)" = "422"   # remise en état
+          test "$(code -c r.jar -b r.jar --data-urlencode "csrf=$T" -d "id_salle=1&debut=2020-01-01T18:00" $B/responsable/sessions)" = "422"   # passé
+
+          # --- S5 : réservation d'un groupe (session 30 : libre dans le seed) ---
+          test "$(code -c g.jar -b g.jar $B/reserver/30)" = "200"; T=$(jeton)
+          F='nom_groupe=Groupe CI&contact_nom=Test CI&contact_email=ci@exemple.test&conditions=1'
+          test "$(code -c g.jar -b g.jar --data-urlencode "csrf=$T" -d "$F&nb_joueurs=7" $B/reserver/30)" = "422"   # au-delà de la capacité
+          test "$(code -c g.jar -b g.jar --data-urlencode "csrf=$T" -d "$F&nb_joueurs=4" $B/reserver/30)" = "303"
+          test "$(code -c g.jar -b g.jar $B/reserver/confirmation)" = "200"
+          grep -q -E 'AO-[A-Z0-9]{8}' /tmp/r.html
+          test "$(code -c g.jar -b g.jar --data-urlencode "csrf=$T" -d "$F&nb_joueurs=4" $B/reserver/30)" = "409"   # déjà pris
+          test "$(code $B/reserver/1)" = "409"   # session passée
+
       - name: Logs en cas d'échec
         if: failure()
         run: cat /tmp/escapeops-server.log || true
