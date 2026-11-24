@@ -1,0 +1,8 @@
+:root {
+    --fond: #F2F0EB;        /* fond de page */
+    --papier: #FFFFFF;      /* cartes */
+    --encre: #1E1F22;       /* texte principal */
+    --texte-doux: #5C5F66;  /* texte secondaire */
+    --trait: #D9D6CF;       /* bordures */
+    --accent: #2F4BFF;      /* bleu : liens, créneaux libres */
+}

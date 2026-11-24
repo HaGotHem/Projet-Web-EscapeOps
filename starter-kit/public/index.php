@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Controller\EquipmentController;
+use App\Controller\VitrineController;
 use App\Database\DatabaseFactory;
 use App\Http\ViewRenderer;
-use App\Repository\EquipmentRepository;
-use App\Service\EquipmentService;
+use App\Repository\SalleRepository;
+use App\Service\VitrineService;
 use Dotenv\Dotenv;
 use Slim\Factory\AppFactory;
 
@@ -21,10 +21,9 @@ $settings = require $root . '/config/settings.php';
 $app = AppFactory::create();
 
 $database = DatabaseFactory::create($settings['database']);
-$repository = new EquipmentRepository($database);
-$service = new EquipmentService($repository);
 $renderer = new ViewRenderer($root . '/templates');
-$controller = new EquipmentController($service, $renderer);
+
+$controller = new VitrineController(new VitrineService(new SalleRepository($database)), $renderer);
 
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
