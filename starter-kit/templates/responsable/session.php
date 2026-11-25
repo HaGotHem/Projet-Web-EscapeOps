@@ -63,6 +63,33 @@ $s = $session;
                 <p class="text-ko font-semibold">Aucun game master affecté.</p>
                 <p class="text-sm text-texte-doux mt-1">Une session sans game master ne peut pas démarrer (règle E5).</p>
             <?php endif; ?>
+
+            <?php if ($s['gm_modifiable']): ?>
+                <ul class="mt-5 flex flex-col gap-2">
+                    <?php foreach ($s['game_masters'] as $gm): ?>
+                        <li class="flex flex-wrap items-center justify-between gap-2 border-t border-gris-trait pt-2">
+                            <div>
+                                <p class="font-medium"><?= Html::e($gm['nom']) ?></p>
+                                <?php if ($gm['conflit'] !== null): ?>
+                                    <p class="text-sm text-ko">Déjà sur « <?= Html::e($gm['conflit']['nom_salle']) ?> » · <?= Html::e(FormatFr::horaire($gm['conflit']['debut_session'], $gm['conflit']['fin_session'])) ?></p>
+                                <?php else: ?>
+                                    <p class="text-sm text-texte-doux">Libre sur ce créneau</p>
+                                <?php endif; ?>
+                            </div>
+                            <?php if ($gm['affecte']): ?>
+                                <span class="text-sm font-semibold text-ok">Affecté</span>
+                            <?php else: ?>
+                                <!-- Le bouton reste actif même en conflit : c'est le serveur qui refuse (E5) -->
+                                <form method="post" action="/responsable/sessions/<?= (int) $s['id_session'] ?>/game-master">
+                                    <input type="hidden" name="csrf" value="<?= Html::e($csrf) ?>">
+                                    <input type="hidden" name="id_game_master" value="<?= (int) $gm['id'] ?>">
+                                    <button type="submit" class="min-h-10 px-4 rounded-md border border-marine text-marine font-semibold hover:bg-marine hover:text-white cursor-pointer">Affecter</button>
+                                </form>
+                            <?php endif; ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
         </section>
     </div>
 

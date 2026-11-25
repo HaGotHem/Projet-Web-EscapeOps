@@ -32,6 +32,7 @@ return static function (App $app, array $c, callable $role): void {
         $g->post('/sessions', [$c['equipe'], 'creerSession']);
         $g->get('/sessions/{id:[0-9]+}', [$c['equipe'], 'session']);
         $g->post('/sessions/{id:[0-9]+}/etat', [$c['equipe'], 'changerEtat']);
+        $g->post('/sessions/{id:[0-9]+}/game-master', [$c['equipe'], 'affecterGameMaster']);
     })->add($role(['RESPONSABLE']));
 
     // --- Game master -------------------------------------------------------------

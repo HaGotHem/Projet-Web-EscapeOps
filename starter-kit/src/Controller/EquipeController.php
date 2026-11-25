@@ -106,6 +106,26 @@ final class EquipeController
         return $this->rediriger($response, '/responsable/sessions/' . $id);
     }
 
+    /** POST /responsable/sessions/{id}/game-master (règle E5) */
+    public function affecterGameMaster(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $id = (int) $args['id'];
+        $saisie = (array) $request->getParsedBody();
+
+        if (!Csrf::estValide($saisie['csrf'] ?? null)) {
+            $this->ecrireMessage('Votre session a expiré. Réessayez.', true);
+        } else {
+            try {
+                $nom = $this->sessions->affecterGameMaster($id, (int) ($saisie['id_game_master'] ?? 0));
+                $this->ecrireMessage('Game master affecté : ' . $nom . '.');
+            } catch (RegleMetierException $e) {
+                $this->ecrireMessage($e->getMessage(), true);
+            }
+        }
+
+        return $this->rediriger($response, '/responsable/sessions/' . $id);
+    }
+
     // --- Game master -----------------------------------------------------------
 
     /** GET /gm/sessions */

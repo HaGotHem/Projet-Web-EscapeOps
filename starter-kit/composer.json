@@ -23,7 +23,8 @@
     ],
     "test": [
       "php tests/http-input.php",
-      "php tests/regles-s4-s5.php"
+      "php tests/regles-s4-s5.php",
+      "php tests/regles-e5.php"
     ]
   }
 }

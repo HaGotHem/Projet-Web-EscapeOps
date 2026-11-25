@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Domain\Creneau;
 use App\Domain\EtatSession;
 use App\Domain\RegleMetierException;
 use App\Domain\SaisieInvalide;
@@ -19,6 +20,9 @@ final class SessionService
 {
     /** Le planning montre aujourd'hui et les 6 jours suivants. */
     public const JOURS_PLANNING = 7;
+
+    /** E5 : on ne choisit le game master que d'une session qui n'a pas commencé. */
+    private const ETATS_AFFECTABLES = ['PREVUE', 'PRETE'];
 
     public function __construct(
         private SessionRepository $sessions,
@@ -63,7 +67,94 @@ final class SessionService
             ];
         }
 
+        // E5 : les game masters proposés, chacun avec sa session en conflit (ou null).
+        // Seulement pour l'affichage : affecterGameMaster() revérifie au moment du POST.
+        $session['gm_modifiable'] = in_array($session['etat_session'], self::ETATS_AFFECTABLES, true);
+        $session['game_masters'] = [];
+        if ($session['gm_modifiable']) {
+            foreach ($this->sessions->gameMastersActifs() as $gm) {
+                $id = (int) $gm['id_utilisateur'];
+                $session['game_masters'][] = [
+                    'id' => $id,
+                    'nom' => $gm['prenom_utilisateur'] . ' ' . $gm['nom_utilisateur'],
+                    'affecte' => (int) $session['id_game_master'] === $id,
+                    'conflit' => $this->conflitGameMaster($session, $id),
+                ];
+            }
+        }
+
         return $session;
+    }
+
+    /**
+     * E5 : affecte un game master à une session PREVUE ou PRETE.
+     * @throws RegleMetierException si la session, le game master ou le créneau ne le permet pas
+     */
+    public function affecterGameMaster(int $idSession, int $idGameMaster): string
+    {
+        $session = $this->sessions->trouver($idSession);
+        if ($session === null) {
+            throw new RegleMetierException('Session introuvable.');
+        }
+
+        if (!in_array($session['etat_session'], self::ETATS_AFFECTABLES, true)) {
+            throw new RegleMetierException('On ne choisit le game master que d\'une session prévue ou prête.');
+        }
+
+        $gm = null;
+        foreach ($this->sessions->gameMastersActifs() as $candidat) {
+            if ((int) $candidat['id_utilisateur'] === $idGameMaster) {
+                $gm = $candidat;
+            }
+        }
+        if ($gm === null) {
+            throw new RegleMetierException('Ce compte n\'est pas un game master actif.');
+        }
+        $nom = $gm['prenom_utilisateur'] . ' ' . $gm['nom_utilisateur'];
+
+        if ((int) $session['id_game_master'] === $idGameMaster) {
+            return $nom; // déjà affecté : rien à changer
+        }
+
+        // Règle E5 : un game master ne peut pas se dédoubler
+        $conflit = $this->conflitGameMaster($session, $idGameMaster);
+        if ($conflit !== null) {
+            throw new RegleMetierException(sprintf(
+                'Affectation refusée (règle E5) : %s anime déjà « %s » de %s à %s.',
+                $nom,
+                $conflit['nom_salle'],
+                (new DateTimeImmutable($conflit['debut_session']))->format('G \h i'),
+                (new DateTimeImmutable($conflit['fin_session']))->format('G \h i')
+            ));
+        }
+
+        if (!$this->sessions->affecterGameMaster($idSession, $idGameMaster, $session['etat_session'])) {
+            throw new RegleMetierException('La session a été modifiée entre-temps. Rechargez la page.');
+        }
+
+        return $nom;
+    }
+
+    /** La première session du game master qui chevauche celle-ci, ou null (E5). */
+    private function conflitGameMaster(array $session, int $idGameMaster): ?array
+    {
+        $debut = new DateTimeImmutable($session['debut_session']);
+        $fin = new DateTimeImmutable($session['fin_session']);
+
+        $autres = $this->sessions->autresSessionsDuGameMaster(
+            $idGameMaster,
+            (int) $session['id_session'],
+            $session['debut_session'],
+            $session['fin_session']
+        );
+
+        foreach ($autres as $autre) {
+            if (Creneau::chevauche($debut, $fin, new DateTimeImmutable($autre['debut_session']), new DateTimeImmutable($autre['fin_session']))) {
+                return $autre;
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -93,6 +93,60 @@ final class SessionRepository
         ])->fetchColumn() > 0;
     }
 
+    /** Les game masters actifs, pour les proposer à l'affectation (E5). */
+    public function gameMastersActifs(): array
+    {
+        return $this->database->select(
+            'utilisateur',
+            ['id_utilisateur', 'prenom_utilisateur', 'nom_utilisateur'],
+            [
+                'role_utilisateur' => 'GAME_MASTER',
+                'actif_utilisateur' => 1,
+                'ORDER' => ['prenom_utilisateur' => 'ASC'],
+            ]
+        );
+    }
+
+    /**
+     * Les autres sessions non annulées d'un game master autour d'un créneau (± 1 jour).
+     * C'est un pré-filtre large : la vraie règle de chevauchement est dans Creneau (E5).
+     */
+    public function autresSessionsDuGameMaster(int $idGameMaster, int $idSessionExclue, string $debut, string $fin): array
+    {
+        $sql = "
+            SELECT s.id_session, s.debut_session, s.fin_session, sa.nom_salle
+              FROM session s
+              JOIN salle sa ON sa.id_salle = s.id_salle
+             WHERE s.id_game_master = :gm
+               AND s.id_session <> :id
+               AND s.etat_session <> 'ANNULEE'
+               AND s.debut_session < :fin + INTERVAL 1 DAY
+               AND s.fin_session > :debut - INTERVAL 1 DAY
+             ORDER BY s.debut_session";
+
+        return $this->database->query($sql, [
+            ':gm' => $idGameMaster,
+            ':id' => $idSessionExclue,
+            ':debut' => $debut,
+            ':fin' => $fin,
+        ])->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Affecte le game master seulement si la session est encore dans l'état lu
+     * (même protection que changerEtat). Renvoie false sinon.
+     */
+    public function affecterGameMaster(int $idSession, int $idGameMaster, string $etatAttendu): bool
+    {
+        $resultat = $this->database->update(
+            'session',
+            ['id_game_master' => $idGameMaster],
+            ['id_session' => $idSession, 'etat_session' => $etatAttendu]
+        );
+
+        return $resultat !== null && $resultat->rowCount() === 1;
+    }
+
     public function creer(int $idSalle, string $debut, string $fin): int
     {
         $this->database->insert('session', [
