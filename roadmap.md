@@ -23,8 +23,9 @@ Jalon du soir : 🟢 3 règles + API · 🟠 2 règles + socle stable · 🔴 mo
 - [x] **A1 · Exposer l'API JSON des salles, sessions et incidents** — 2 h
   - Liste, détail et une écriture (incident ou réservation) ; erreurs 404 et 422.
   - Preuves : requêtes HTTP de test, captures dans `livrables/3-api/captures/`.
-- [ ] **A2 · Analyser l'impact du ticket d'évolution** — 1 h
+- [x] **A2 · Analyser l'impact du ticket d'évolution** — 1 h
   - Remplir `livrables/6-documentation/ANALYSE_EVOLUTION.md` **avant** de toucher au code.
+  - Ticket EV-THO-01 (AstrowareConception/BTS2-projets-web#9) : accepté en version complète, à faire en Q2.
 
 ## Jeudi 26 — évolution et incident
 
@@ -37,7 +38,10 @@ Jalon du soir : l'évolution et l'incident sont traçables, les trois règles re
   - Tableau de bord sur la vue SQL (maquette 05) ; formulaire d'incident du game master (maquette 10).
   - La saisie d'incident n'a pas encore de tâche dans Jalon : à y ajouter.
   - Preuve : capture du tableau de bord.
-- [ ] **Q2 · Implémenter l'évolution et rejouer la non-régression** — 3 h
+- [ ] **Q2 · Implémenter l'évolution et rejouer la non-régression** — 3 h (estimé 2 h)
+  - EV-THO-01 : refuser `PRETE → EN_COURS` quand la salle est à 10/10 (E9) ; un contrôle du responsable débloque.
+  - Tests 9 / 10 / 11 / remise à zéro / annulée ignorée ; recette T12-T13 ; capture du refus puis du retour à la normale.
+  - Après Q1 si possible, pour lire le compteur de la procédure « bilan par salle ».
   - Preuves : commit + résultats des tests.
 - [ ] **Q3 · Corriger l'incident et rédiger le rapport** — 2 h
   - Preuve : `livrables/6-documentation/RAPPORT_INCIDENT.md`.
