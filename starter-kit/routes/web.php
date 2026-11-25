@@ -7,12 +7,13 @@ use Slim\Routing\RouteCollectorProxy;
 
 /**
  * Routes HTML.
- * @param array    $c    contrôleurs : vitrine, auth, equipe, reservation
+ * @param array    $c    contrôleurs : vitrine, auth, equipe, reservation (+ debug en développement)
  * @param callable $role $role(['RESPONSABLE']) crée le middleware qui réserve des routes à ces rôles
  */
 return static function (App $app, array $c, callable $role): void {
     // --- Public : vitrine et réservation d'un groupe (S3, S5) ------------------
     $app->get('/', [$c['vitrine'], 'accueil']);
+    $app->get('/salles/{id:[0-9]+}', [$c['vitrine'], 'salle']);
     $app->get('/reserver/confirmation', [$c['reservation'], 'confirmation']);
     $app->get('/reserver/{id:[0-9]+}', [$c['reservation'], 'formulaire']);
     $app->post('/reserver/{id:[0-9]+}', [$c['reservation'], 'reserver']);
@@ -40,4 +41,9 @@ return static function (App $app, array $c, callable $role): void {
     // --- Administrateur ----------------------------------------------------------
     $app->get('/admin/comptes', [$c['equipe'], 'comptes'])
         ->add($role(['ADMIN']));
+
+    // --- Debug : connexion rapide (seulement en APP_ENV=dev + APP_DEBUG=true) ----
+    if (isset($c['debug'])) {
+        $app->post('/debug/connexion', [$c['debug'], 'connecter']);
+    }
 };

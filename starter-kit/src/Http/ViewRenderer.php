@@ -9,8 +9,16 @@ use RuntimeException;
 
 final class ViewRenderer
 {
+    /** Données disponibles dans toutes les vues (ex. comptes du menu debug). */
+    private array $partage = [];
+
     public function __construct(private string $basePath)
     {
+    }
+
+    public function partager(string $cle, mixed $valeur): void
+    {
+        $this->partage[$cle] = $valeur;
     }
 
     public function render(
@@ -25,7 +33,7 @@ final class ViewRenderer
             throw new RuntimeException('Vue introuvable : ' . $template);
         }
 
-        extract($data, EXTR_SKIP);
+        extract($data + $this->partage, EXTR_SKIP);
 
         ob_start();
         require $file;

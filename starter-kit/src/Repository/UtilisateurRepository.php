@@ -30,6 +30,22 @@ final class UtilisateurRepository
         ) ?: null;
     }
 
+    /** Un compte par son identifiant (sans le hash), pour la connexion rapide du mode debug. */
+    public function findById(int $id): ?array
+    {
+        return $this->database->get(
+            'utilisateur',
+            [
+                'id_utilisateur',
+                'nom_utilisateur',
+                'prenom_utilisateur',
+                'role_utilisateur',
+                'actif_utilisateur',
+            ],
+            ['id_utilisateur' => $id]
+        ) ?: null;
+    }
+
     /** Tous les comptes, pour la page de l'administrateur (sans le hash du mot de passe). */
     public function all(): array
     {

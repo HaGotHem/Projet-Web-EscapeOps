@@ -39,11 +39,37 @@ final class SalleRepository
     }
 
     /**
+     * Une salle par son identifiant, ou null si elle n'existe pas.
+     */
+    public function trouver(int $idSalle): ?array
+    {
+        $salle = $this->database->get(
+            'salle',
+            [
+                'id_salle',
+                'nom_salle',
+                'theme_salle',
+                'description_salle',
+                'duree_jeu_min',
+                'capacite_min',
+                'capacite_max',
+            ],
+            ['id_salle' => $idSalle]
+        );
+
+        return is_array($salle) ? $salle : null;
+    }
+
+    /**
      * Créneaux publiés : sessions PREVUE ou PRETE qui n'ont pas encore commencé.
      * Pour chacune, on compte ses réservations confirmées (0 = libre, 1 = réservé).
+     * Avec $idSalle, on ne garde que les créneaux de cette salle (fiche salle).
      */
-    public function creneauxPublies(): array
+    public function creneauxPublies(?int $idSalle = null): array
     {
+        $filtreSalle = $idSalle === null ? '' : 'AND s.id_salle = :salle';
+        $parametres = $idSalle === null ? [] : [':salle' => $idSalle];
+
         $sql = "
             SELECT s.id_session,
                    s.id_salle,
@@ -56,9 +82,10 @@ final class SalleRepository
               FROM session s
              WHERE s.etat_session IN ('PREVUE', 'PRETE')
                AND s.debut_session > NOW()
+               {$filtreSalle}
              ORDER BY s.id_salle, s.debut_session
         ";
 
-        return $this->database->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        return $this->database->query($sql, $parametres)->fetchAll(PDO::FETCH_ASSOC);
     }
 }

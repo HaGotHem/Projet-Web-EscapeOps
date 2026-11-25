@@ -39,6 +39,27 @@ final class AuthService
             return null;
         }
 
+        return $this->ouvrirSession($u);
+    }
+
+    /**
+     * DEBUG uniquement : connexion sans mot de passe à un compte actif.
+     * N'est appelée que par DebugController, dont la route n'existe qu'en
+     * APP_ENV=dev avec APP_DEBUG=true (voir public/index.php).
+     */
+    public function connecterSansMotDePasse(int $idUtilisateur): ?array
+    {
+        $u = $this->repository->findById($idUtilisateur);
+
+        if ($u === null || (int) $u['actif_utilisateur'] !== 1) {
+            return null;
+        }
+
+        return $this->ouvrirSession($u);
+    }
+
+    private function ouvrirSession(array $u): array
+    {
         // Nouvel identifiant de session à la connexion : protège contre la fixation de session
         session_regenerate_id(true);
 

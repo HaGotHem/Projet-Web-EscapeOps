@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Controller\AuthController;
+use App\Controller\DebugController;
 use App\Controller\EquipeController;
 use App\Controller\ReservationController;
 use App\Controller\VitrineController;
@@ -68,6 +69,17 @@ $controleurs = [
         $renderer
     ),
 ];
+
+// Mode debug (développement seulement) : connexion rapide à un compte de démo.
+// En production (APP_ENV=prod ou APP_DEBUG=false), ni la route ni le menu n'existent.
+if ($settings['app']['env'] === 'dev' && $settings['app']['debug']) {
+    $controleurs['debug'] = new DebugController($auth);
+    // Closure : la requête SQL n'est faite que si une page affiche le menu
+    $renderer->partager('debugComptes', static fn (): array => array_filter(
+        $utilisateurs->all(),
+        static fn (array $u): bool => (int) $u['actif_utilisateur'] === 1
+    ));
+}
 
 // Fabrique de middlewares de contrôle d'accès : $role(['RESPONSABLE']) protège un groupe de routes
 $role = static fn (array $roles): RoleMiddleware => new RoleMiddleware(

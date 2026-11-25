@@ -7,5 +7,6 @@
         <p class="self-end">Ouvert du mardi au dimanche · Sessions de 14 h 00 à 22 h 00</p>
     </div>
 </footer>
+<?php require __DIR__ . '/debug-connexion.php'; ?>
 </body>
 </html>

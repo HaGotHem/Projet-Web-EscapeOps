@@ -31,4 +31,27 @@ final class VitrineController
             'salles' => $this->service->salles(),
         ]);
     }
+
+    /**
+     * GET /salles/{id} : fiche publique d'une salle et de tous ses créneaux publiés.
+     */
+    public function salle(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
+        $salle = $this->service->salle((int) $args['id']);
+
+        if ($salle === null) {
+            return $this->renderer->render($response, 'message', [
+                'titre' => 'Salle introuvable',
+                'texte' => 'Cette salle n\'existe pas ou n\'est plus proposée.',
+                'code' => 404,
+                'lien' => '/#salles',
+                'lienTexte' => 'Voir toutes les salles',
+            ], 404);
+        }
+
+        return $this->renderer->render($response, 'salle', ['salle' => $salle]);
+    }
 }
