@@ -24,7 +24,10 @@
     "test": [
       "php tests/http-input.php",
       "php tests/regles-s4-s5.php",
-      "php tests/regles-e5.php"
+      "php tests/regles-e5.php",
+      "php tests/regles-e7.php",
+      "php tests/regles-e9.php",
+      "php tests/saisie-incident.php"
     ]
   }
 }

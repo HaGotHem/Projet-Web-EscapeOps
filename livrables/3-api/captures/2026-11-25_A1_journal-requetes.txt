@@ -1,0 +1,147 @@
+Journal des requêtes de test — API EscapeOps — 25/11/2026 14:59
+
+==================================================================
+#1  GET collection : 200 + tableau
+$ curl http://127.0.0.1:8080/api/salles
+------------------------------------------------------------------
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-store
+
+[{"id":1,"nom":"Le Cabinet des Ombres","theme":"Cabinet de curiosités","description":"Le cabinet de curiosités d'un collectionneur disparu. Retrouvez le registre qu'il a caché avant l'aube.","duree_minutes":60,"joueurs_min":2,"joueurs_max":6},{"id":2,"nom":"La Crypte de l'Archiviste","theme":"Crypte et bibliothèque secrète","description":"Sous la bibliothèque, l'archiviste a scellé un secret. Percez son système de classement avant que la crypte ne se referme.","duree_minutes":60,"joueurs_min":2,"joueurs_max":5},{"id":3,"nom":"Le Laboratoire Interdit","theme":"Laboratoire de 1923","description":"Une expérience interrompue en 1923. Reprenez les notes du professeur et terminez la formule avant qu'elle ne vous échappe.","duree_minutes":75,"joueurs_min":3,"joueurs_max":6}]
+
+
+==================================================================
+#2  GET détail inconnu : 404
+$ curl http://127.0.0.1:8080/api/salles/99
+------------------------------------------------------------------
+HTTP/1.1 404 Not Found
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-store
+
+{"erreur":"Salle introuvable."}
+
+
+==================================================================
+#3  GET collection filtrée : 200
+$ curl http://127.0.0.1:8080/api/sessions?salle=2
+------------------------------------------------------------------
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-store
+
+[{"id":34,"id_salle":2,"debut":"2026-11-25T18:00:00+01:00","fin":"2026-11-25T19:00:00+01:00","libre":true},{"id":38,"id_salle":2,"debut":"2026-11-26T12:20:00+01:00","fin":"2026-11-26T13:20:00+01:00","libre":true},{"id":40,"id_salle":2,"debut":"2026-11-28T19:00:00+01:00","fin":"2026-11-28T20:00:00+01:00","libre":true}]
+
+
+==================================================================
+#4  GET filtre invalide : 422
+$ curl http://127.0.0.1:8080/api/sessions?salle=abc
+------------------------------------------------------------------
+HTTP/1.1 422 Unprocessable Entity
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-store
+
+{"erreur":"Paramètre invalide.","champs":{"salle":"Identifiant de salle entier attendu."}}
+
+
+==================================================================
+#5  GET détail session : 200
+$ curl http://127.0.0.1:8080/api/sessions/31
+------------------------------------------------------------------
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-store
+
+{"id":31,"salle":{"id":1,"nom":"Le Cabinet des Ombres"},"debut":"2026-11-25T18:30:00+01:00","fin":"2026-11-25T19:30:00+01:00","etat":"PREVUE","libre":true}
+
+
+==================================================================
+#6  POST valide (game master) : 201 + Location
+$ curl -u lea.martin@archives-obscures.example:******** -H Content-Type: application/json -d {"id_salle":2,"titre":"L'orgue ne joue plus la s\u00e9quence finale","gravite":"BLOQUANT","id_equipement":3} http://127.0.0.1:8080/api/incidents
+------------------------------------------------------------------
+HTTP/1.1 201 Created
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-store
+Location: /api/incidents/6
+
+{"id":6,"titre":"L'orgue ne joue plus la séquence finale","description":null,"gravite":"BLOQUANT","statut":"OUVERT","declare_le":"2026-11-25T14:59:01+01:00","resolu_le":null,"salle":{"id":2,"nom":"La Crypte de l'Archiviste"},"equipement":{"id":3,"nom":"Orgue à pédales électronique"},"declarant":{"id":3,"nom":"Léa Martin"}}
+
+
+==================================================================
+#7  POST JSON malformé : 400
+$ curl -u lea.martin@archives-obscures.example:******** -H Content-Type: application/json -d {"id_salle":2, http://127.0.0.1:8080/api/incidents
+------------------------------------------------------------------
+HTTP/1.1 400 Bad Request
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-store
+
+{"erreur":"JSON mal formé."}
+
+
+==================================================================
+#8  POST mauvais Content-Type : 415
+$ curl -u lea.martin@archives-obscures.example:******** -H Content-Type: text/plain -d orgue en panne http://127.0.0.1:8080/api/incidents
+------------------------------------------------------------------
+HTTP/1.1 415 Unsupported Media Type
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-store
+
+{"erreur":"Content-Type application/json attendu."}
+
+
+==================================================================
+#9  POST champs invalides : 422 avec une erreur par champ
+$ curl -u lea.martin@archives-obscures.example:******** -H Content-Type: application/json -d {"id_salle":1,"titre":"ab","gravite":"CRITIQUE","id_equipement":3} http://127.0.0.1:8080/api/incidents
+------------------------------------------------------------------
+HTTP/1.1 422 Unprocessable Entity
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-store
+
+{"erreur":"Incident refusé : corrigez les champs indiqués.","champs":{"titre":"Le titre est un texte de 3 à 150 caractères.","gravite":"La gravité vaut MINEUR ou BLOQUANT.","id_equipement":"Cet équipement n'est pas affecté à cette salle."}}
+
+
+==================================================================
+#10  POST sans authentification : 401
+$ curl -H Content-Type: application/json -d {"id_salle":2,"titre":"Test","gravite":"MINEUR"} http://127.0.0.1:8080/api/incidents
+------------------------------------------------------------------
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-store
+WWW-Authenticate: Basic realm="EscapeOps API", charset="UTF-8"
+
+{"erreur":"Authentification requise : en-tête Authorization Basic avec l'email et le mot de passe d'un compte actif."}
+
+
+==================================================================
+#11  POST affectation par un game master : 403
+$ curl -u lea.martin@archives-obscures.example:******** -H Content-Type: application/json -d {"id_game_master":5} http://127.0.0.1:8080/api/sessions/31/game-master
+------------------------------------------------------------------
+HTTP/1.1 403 Forbidden
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-store
+
+{"erreur":"Votre rôle ne permet pas cette action."}
+
+
+==================================================================
+#12  POST affectation en conflit (règle E5) : 422
+$ curl -u camille.roux@archives-obscures.example:******** -H Content-Type: application/json -d {"id_game_master":5} http://127.0.0.1:8080/api/sessions/31/game-master
+------------------------------------------------------------------
+HTTP/1.1 422 Unprocessable Entity
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-store
+
+{"erreur":"Affectation refusée (règle E5) : Nora Benali anime déjà « La Crypte de l'Archiviste » de 18 h 00 à 19 h 00."}
+
+
+==================================================================
+#13  POST affectation, session inconnue : 404
+$ curl -u camille.roux@archives-obscures.example:******** -H Content-Type: application/json -d {"id_game_master":4} http://127.0.0.1:8080/api/sessions/9999/game-master
+------------------------------------------------------------------
+HTTP/1.1 404 Not Found
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-store
+
+{"erreur":"Session introuvable."}
+
+

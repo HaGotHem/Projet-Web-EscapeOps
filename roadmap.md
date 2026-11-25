@@ -9,18 +9,18 @@ Déjà fait : C1, C2, C3 (choix des règles, maquettes, MCD/MLD), S1, S2, S3, S4
 
 Jalon du soir : 🟢 3 règles + API · 🟠 2 règles + socle stable · 🔴 moins de 2 règles.
 
-- [ ] **R1 · E5 : refuser le dédoublement d'un game master** — 4 h
+- [x] **R1 · E5 : refuser le dédoublement d'un game master** — 4 h
   - Affectation refusée si le game master a déjà une session qui chevauche ; créneaux jointifs acceptés ; démarrage refusé sans game master.
   - Preuves : `tests/regle-e5.php`, captures `…_R1_refus-gm-18h.png`, `…_R1_jointif-accepte.png`, `…_R1_demarrage-sans-gm.png` (maquettes 06 et 07).
-- [ ] **R2 · E7 : classer les annulations `SANS_FRAIS` / `TARDIVE`** — 2 h
+- [x] **R2 · E7 : classer les annulations `SANS_FRAIS` / `TARDIVE`** — 2 h
   - Bouton « Annuler la réservation » sur la fiche session ; au moins 24 h avant le début → `SANS_FRAIS`, sinon `TARDIVE`.
   - Preuves : `tests/regle-e7.php` (26 h, 24 h pile, 2 h), captures 26 h et 2 h (maquettes 08a et 08b).
-- [ ] **R3 · E9 : badge `CONTROLE_A_PREVOIR` après 10 sessions** — 3 h
+- [x] **R3 · E9 : badge `CONTROLE_A_PREVOIR` après 10 sessions** — 3 h
   - Fiche salle du responsable : compteur depuis le dernier contrôle, badge à 10, « Enregistrer un contrôle » qui remet à zéro ; sessions annulées ignorées.
   - Preuves : `tests/regle-e9.php` (9/10, 10/10, remise à zéro), capture du badge (maquette 09).
-- [ ] **C4 · Rédiger le contrat d'API** — 1 h
+- [x] **C4 · Rédiger le contrat d'API** — 1 h
   - `docs/api.md` : routes, codes 200 / 201 / 404 / 422, exemples de requêtes et de réponses.
-- [ ] **A1 · Exposer l'API JSON des salles, sessions et incidents** — 2 h
+- [x] **A1 · Exposer l'API JSON des salles, sessions et incidents** — 2 h
   - Liste, détail et une écriture (incident ou réservation) ; erreurs 404 et 422.
   - Preuves : requêtes HTTP de test, captures dans `livrables/3-api/captures/`.
 - [ ] **A2 · Analyser l'impact du ticket d'évolution** — 1 h

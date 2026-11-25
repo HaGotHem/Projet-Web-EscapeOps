@@ -9,18 +9,21 @@ use App\Domain\SaisieInvalide;
 use App\Http\Csrf;
 use App\Http\ViewRenderer;
 use App\Repository\UtilisateurRepository;
+use App\Service\MaintenanceService;
 use App\Service\SessionService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Pages de l'équipe, derrière RoleMiddleware (S4/S5) :
- * responsable (planning, sessions), game master (mes sessions), admin (comptes).
+ * responsable (planning, sessions, annulations E7, salles et maintenance E9),
+ * game master (mes sessions), admin (comptes).
  */
 final class EquipeController
 {
     public function __construct(
         private SessionService $sessions,
+        private MaintenanceService $maintenance,
         private UtilisateurRepository $utilisateurs,
         private ViewRenderer $renderer
     ) {
@@ -124,6 +127,109 @@ final class EquipeController
         }
 
         return $this->rediriger($response, '/responsable/sessions/' . $id);
+    }
+
+    /** GET /responsable/sessions/{id}/annulation : confirmation, classement annoncé (E7) */
+    public function confirmerAnnulation(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $id = (int) $args['id'];
+
+        try {
+            $apercu = $this->sessions->apercuAnnulation($id);
+        } catch (RegleMetierException $e) {
+            $this->ecrireMessage($e->getMessage(), true);
+
+            return $this->rediriger($response, '/responsable/sessions/' . $id);
+        }
+
+        return $this->vue($request, $response, 'responsable/annulation', ['session' => $apercu]);
+    }
+
+    /** POST /responsable/sessions/{id}/annulation (règle E7) */
+    public function annulerReservation(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $id = (int) $args['id'];
+        $saisie = (array) $request->getParsedBody();
+
+        if (!Csrf::estValide($saisie['csrf'] ?? null)) {
+            $this->ecrireMessage('Votre session a expiré. Réessayez.', true);
+        } else {
+            try {
+                $statut = $this->sessions->annulerReservation($id);
+                $this->ecrireMessage(sprintf(
+                    'Réservation annulée : classée %s (règle E7). Le créneau est de nouveau proposé sur la vitrine.',
+                    $statut === 'SANS_FRAIS' ? 'SANS FRAIS' : 'TARDIVE'
+                ));
+            } catch (RegleMetierException $e) {
+                $this->ecrireMessage($e->getMessage(), true);
+            }
+        }
+
+        return $this->rediriger($response, '/responsable/sessions/' . $id);
+    }
+
+    /** GET /responsable/salles : salles et compteurs de maintenance (E9) */
+    public function salles(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    {
+        return $this->vue($request, $response, 'responsable/salles', [
+            'salles' => $this->maintenance->salles(),
+            'message' => $this->lireMessage(),
+        ]);
+    }
+
+    /** GET /responsable/salles/{id} : compteur, sessions comptées, contrôles (E9) */
+    public function salle(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $salle = $this->maintenance->fiche((int) $args['id']);
+
+        if ($salle === null) {
+            return $this->vue($request, $response, 'message', [
+                'titre' => 'Salle introuvable',
+                'texte' => 'Cette salle n\'existe pas.',
+                'code' => 404,
+                'lien' => '/responsable/salles',
+                'lienTexte' => 'Retour aux salles',
+            ], 404);
+        }
+
+        return $this->vue($request, $response, 'responsable/salle', [
+            'salle' => $salle,
+            'erreurs' => [],
+            'valeurs' => [],
+            'message' => $this->lireMessage(),
+        ]);
+    }
+
+    /** POST /responsable/salles/{id}/controles : enregistre un contrôle, le compteur repart à 0 (E9) */
+    public function enregistrerControle(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $id = (int) $args['id'];
+        $saisie = (array) $request->getParsedBody();
+
+        if (!Csrf::estValide($saisie['csrf'] ?? null)) {
+            $this->ecrireMessage('Votre session a expiré. Réessayez.', true);
+
+            return $this->rediriger($response, '/responsable/salles/' . $id);
+        }
+
+        try {
+            $this->maintenance->enregistrerControle($id, (int) $request->getAttribute('utilisateur')['id'], $saisie);
+        } catch (SaisieInvalide $e) {
+            return $this->vue($request, $response, 'responsable/salle', [
+                'salle' => $this->maintenance->fiche($id),
+                'erreurs' => $e->erreurs,
+                'valeurs' => $saisie,
+                'message' => null,
+            ], 422);
+        } catch (RegleMetierException $e) {
+            $this->ecrireMessage($e->getMessage(), true);
+
+            return $this->rediriger($response, '/responsable/salles');
+        }
+
+        $this->ecrireMessage('Contrôle enregistré : le compteur est revenu à 0/10 (règle E9).');
+
+        return $this->rediriger($response, '/responsable/salles/' . $id);
     }
 
     // --- Game master -----------------------------------------------------------

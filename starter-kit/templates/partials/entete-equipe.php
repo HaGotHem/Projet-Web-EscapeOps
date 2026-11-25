@@ -8,7 +8,7 @@
 use App\View\Html;
 
 $liens = [
-    'RESPONSABLE' => ['/responsable/sessions' => 'Planning', '/responsable/sessions/nouvelle' => 'Nouvelle session'],
+    'RESPONSABLE' => ['/responsable/sessions' => 'Planning', '/responsable/sessions/nouvelle' => 'Nouvelle session', '/responsable/salles' => 'Salles & maintenance'],
     'GAME_MASTER' => ['/gm/sessions' => 'Mes sessions'],
     'ADMIN' => ['/admin/comptes' => 'Comptes'],
 ][$utilisateur['role']] ?? [];

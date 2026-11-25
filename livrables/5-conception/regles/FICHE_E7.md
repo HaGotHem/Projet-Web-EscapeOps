@@ -23,10 +23,11 @@ Une annulation tardive laisse un créneau vide qu'on ne peut plus revendre. Le r
 - Ce n'est pas un refus : à moins de 24 h, l'annulation est acceptée mais classée `TARDIVE`.
 
 ## Implémentation
-- service/classe :
-- repository :
-- contrôleur/route :
-- BDD : colonnes `annulee_le` et `statut_annulation` sur la réservation
+- classe : `App\Domain\Annulation::classer($maintenant, $debut)`, règle pure, horloge passée en paramètre (24 h réelles, comparaison de timestamps)
+- service : `SessionService::apercuAnnulation()` (classement annoncé avant de confirmer) et `annulerReservation()` (recalculé au POST, avec l'heure de la base)
+- repository : `ReservationRepository::annuler()` (seulement si encore `CONFIRMEE`), `annulees()`
+- contrôleur/route : `EquipeController`, `GET` et `POST /responsable/sessions/{id}/annulation` ; bouton « Annuler la réservation » sur la fiche session
+- BDD : colonnes `annulee_le` et `statut_annulation` sur la réservation, CHECK `ck_reservation_annulation`
 
 ## Tests
 
@@ -38,6 +39,5 @@ Une annulation tardive laisse un créneau vide qu'on ne peut plus revendre. Le r
 | persistance | relire la réservation | statut conservé |
 
 ## Preuves
-- issue :
-- commits :
-- capture :
+- tests : `starter-kit/tests/regles-e7.php` (26 h, 24 h pile, 23 h 59 min 59 s, 2 h, changement d'heure)
+- captures : `livrables/1-application/captures/2026-11-25_R2_*.png`

@@ -65,6 +65,40 @@ final class ReservationRepository
         );
     }
 
+    /**
+     * E7 : annule la réservation confirmée d'une session avec son classement.
+     * Seulement si elle est encore CONFIRMEE (deux clics ne l'annulent pas deux fois).
+     * $annuleeLe est l'heure qui a servi au classement, pour que les deux concordent.
+     */
+    public function annuler(int $idSession, string $statutAnnulation, string $annuleeLe): bool
+    {
+        $resultat = $this->database->query(
+            "UPDATE reservation
+                SET statut_reservation = 'ANNULEE',
+                    annulee_le = :annulee_le,
+                    statut_annulation = :statut
+              WHERE id_session = :session
+                AND statut_reservation = 'CONFIRMEE'",
+            [':annulee_le' => $annuleeLe, ':statut' => $statutAnnulation, ':session' => $idSession]
+        );
+
+        return $resultat !== null && $resultat->rowCount() === 1;
+    }
+
+    /** E7 : les réservations annulées d'une session, avec leur classement (statut conservé). */
+    public function annulees(int $idSession): array
+    {
+        return $this->database->select(
+            'reservation',
+            ['code_reservation', 'nom_groupe', 'nb_joueurs', 'contact_nom', 'reservee_le', 'annulee_le', 'statut_annulation'],
+            [
+                'id_session' => $idSession,
+                'statut_reservation' => 'ANNULEE',
+                'ORDER' => ['annulee_le' => 'DESC'],
+            ]
+        );
+    }
+
     public function demarrerTransaction(): void
     {
         $this->database->pdo->beginTransaction();

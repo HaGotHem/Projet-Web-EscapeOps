@@ -49,8 +49,28 @@ $s = $session;
                     <?php endif; ?>
                     <dt class="text-texte-doux">Réservée le</dt><dd><?= Html::e(FormatFr::jourCourt($s['reservee_le']) . ' · ' . FormatFr::heure($s['reservee_le'])) ?></dd>
                 </dl>
+                <?php if ($s['reservation_annulable']): ?>
+                    <a href="/responsable/sessions/<?= (int) $s['id_session'] ?>/annulation"
+                       class="mt-5 inline-flex items-center min-h-10 px-4 rounded-md border border-ko-trait text-ko font-semibold no-underline hover:bg-ko-fond">Annuler la réservation</a>
+                <?php endif; ?>
             <?php else: ?>
                 <p class="text-texte-doux">Aucun groupe n'a réservé ce créneau. Il est proposé sur la vitrine tant qu'il est « Prévu » ou « Prêt ».</p>
+            <?php endif; ?>
+
+            <?php if ($s['reservations_annulees'] !== []): ?>
+                <!-- E7 : le classement de chaque annulation reste visible -->
+                <h3 class="font-semibold mt-6 mb-2">Réservations annulées</h3>
+                <ul class="flex flex-col gap-2 text-sm">
+                    <?php foreach ($s['reservations_annulees'] as $a): ?>
+                        <li class="flex flex-wrap items-center justify-between gap-2 border-t border-gris-trait pt-2">
+                            <span>
+                                <span class="font-mono"><?= Html::e($a['code_reservation']) ?></span> · <?= Html::e($a['nom_groupe']) ?>
+                                <span class="block text-texte-doux">Annulée le <?= Html::e(FormatFr::jourCourt($a['annulee_le']) . ' à ' . FormatFr::heure($a['annulee_le'])) ?></span>
+                            </span>
+                            <?= Html::badgeAnnulation($a['statut_annulation']) ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
             <?php endif; ?>
         </section>
 

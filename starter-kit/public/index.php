@@ -2,19 +2,24 @@
 
 declare(strict_types=1);
 
+use App\Controller\ApiController;
 use App\Controller\AuthController;
 use App\Controller\DebugController;
 use App\Controller\EquipeController;
 use App\Controller\ReservationController;
 use App\Controller\VitrineController;
 use App\Database\DatabaseFactory;
+use App\Http\ApiAuthMiddleware;
 use App\Http\RoleMiddleware;
 use App\Http\ViewRenderer;
+use App\Repository\IncidentRepository;
 use App\Repository\ReservationRepository;
 use App\Repository\SalleRepository;
 use App\Repository\SessionRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\AuthService;
+use App\Service\IncidentService;
+use App\Service\MaintenanceService;
 use App\Service\ReservationService;
 use App\Service\SessionService;
 use App\Service\VitrineService;
@@ -24,6 +29,9 @@ use Slim\Factory\AppFactory;
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 $root = dirname(__DIR__);
+
+// Heure de Paris, comme la base : règle E7 (24 h) et dates ISO de l'API
+date_default_timezone_set('Europe/Paris');
 
 Dotenv::createImmutable($root)->safeLoad();
 
@@ -49,26 +57,25 @@ $renderer = new ViewRenderer($root . '/templates');
 
 // Repositories (accès aux données)
 $salles = new SalleRepository($database);
+$sessionsRepo = new SessionRepository($database);
+$reservationsRepo = new ReservationRepository($database);
+$incidentsRepo = new IncidentRepository($database);
 $utilisateurs = new UtilisateurRepository($database);
 
 // Services (règles métier)
 $auth = new AuthService($utilisateurs);
+$sessionService = new SessionService($sessionsRepo, $salles, $reservationsRepo);
+$maintenanceService = new MaintenanceService($salles);
+$incidentService = new IncidentService($incidentsRepo, $salles);
 
 // Contrôleurs
-$controller = new VitrineController(new VitrineService($salles), $renderer);
 $controleurs = [
-    'vitrine' => $controller,
+    'vitrine' => new VitrineController(new VitrineService($salles), $renderer),
     'auth' => new AuthController($auth, $renderer),
-    'equipe' => new EquipeController(
-        new SessionService(new SessionRepository($database), $salles),
-        $utilisateurs,
-        $renderer
-    ),
-    'reservation' => new ReservationController(
-        new ReservationService(new ReservationRepository($database)),
-        $renderer
-    ),
+    'equipe' => new EquipeController($sessionService, $maintenanceService, $utilisateurs, $renderer),
+    'reservation' => new ReservationController(new ReservationService($reservationsRepo), $renderer),
 ];
+$api = new ApiController($salles, $sessionService, $incidentService);
 
 // Mode debug (développement seulement) : connexion rapide à un compte de démo.
 // En production (APP_ENV=prod ou APP_DEBUG=false), ni la route ni le menu n'existent.
@@ -89,6 +96,13 @@ $role = static fn (array $roles): RoleMiddleware => new RoleMiddleware(
     $roles
 );
 
+// Même chose pour l'API : authentification Basic à chaque requête, réponses 401 / 403 en JSON
+$apiAuth = static fn (array $roles): ApiAuthMiddleware => new ApiAuthMiddleware(
+    $auth,
+    $app->getResponseFactory(),
+    $roles
+);
+
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
 $app->addErrorMiddleware(
@@ -98,6 +112,6 @@ $app->addErrorMiddleware(
 );
 
 (require $root . '/routes/web.php')($app, $controleurs, $role);
-(require $root . '/routes/api.php')($app, $controller);
+(require $root . '/routes/api.php')($app, $api, $apiAuth);
 
 $app->run();

@@ -31,4 +31,22 @@ final class Html
         return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full border text-xs font-semibold font-mono uppercase tracking-wide ' . $classes . '">'
             . self::e(EtatSession::libelle($etat)) . '</span>';
     }
+
+    /** Badge du classement d'une annulation (E7), couleurs des maquettes AnnulationSansFrais / Tardive. */
+    public static function badgeAnnulation(string $statut): string
+    {
+        [$classes, $texte] = [
+            'SANS_FRAIS' => ['bg-[#E6F3F4] text-[#135E66] border-[#9FCFD4]', 'Sans frais'],
+            'TARDIVE' => ['bg-[#FDF0E0] text-[#8A4500] border-[#F0C38E]', 'Tardive'],
+        ][$statut] ?? ['bg-gris-fond text-gris border-gris-trait', $statut];
+
+        return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full border text-xs font-semibold font-mono uppercase tracking-wide ' . $classes . '">'
+            . self::e($texte) . '</span>';
+    }
+
+    /** Badge CONTROLE_A_PREVOIR (E9), violet de la maquette SalleResponsable. */
+    public static function badgeControle(): string
+    {
+        return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full border text-xs font-semibold font-mono uppercase tracking-wide bg-[#F1EBFA] text-[#5B2E9A] border-[#C9B3EA]">Contrôle à prévoir</span>';
+    }
 }

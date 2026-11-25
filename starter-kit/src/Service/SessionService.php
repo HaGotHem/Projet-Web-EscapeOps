@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Domain\Annulation;
 use App\Domain\Creneau;
 use App\Domain\EtatSession;
 use App\Domain\RegleMetierException;
 use App\Domain\SaisieInvalide;
 use App\Domain\SaisieSession;
+use App\Repository\ReservationRepository;
 use App\Repository\SalleRepository;
 use App\Repository\SessionRepository;
 use DateTimeImmutable;
 
 /**
- * Gestion des sessions par le responsable (S5) : planning, création, états.
+ * Gestion des sessions par le responsable (S5) : planning, création, états,
+ * game master (E5) et annulation d'une réservation (E7).
  */
 final class SessionService
 {
@@ -26,7 +29,8 @@ final class SessionService
 
     public function __construct(
         private SessionRepository $sessions,
-        private SalleRepository $salles
+        private SalleRepository $salles,
+        private ReservationRepository $reservations
     ) {
     }
 
@@ -43,6 +47,12 @@ final class SessionService
     public function salles(): array
     {
         return $this->salles->all();
+    }
+
+    /** Une session telle qu'elle est en base, ou null. */
+    public function trouver(int $idSession): ?array
+    {
+        return $this->sessions->trouver($idSession);
     }
 
     /**
@@ -81,6 +91,67 @@ final class SessionService
                     'conflit' => $this->conflitGameMaster($session, $id),
                 ];
             }
+        }
+
+        // E7 : la réservation confirmée peut être annulée tant que la partie n'a pas commencé ;
+        // les réservations déjà annulées restent visibles avec leur classement.
+        $session['reservation_annulable'] = $session['code_reservation'] !== null
+            && in_array($session['etat_session'], self::ETATS_AFFECTABLES, true);
+        $session['reservations_annulees'] = $this->reservations->annulees($idSession);
+
+        return $session;
+    }
+
+    /**
+     * E7 : ce que donnerait l'annulation maintenant (page de confirmation).
+     * Le classement est recalculé au moment du POST : la page peut avoir été ouverte avant 24 h.
+     * @throws RegleMetierException si la réservation ne peut pas être annulée
+     */
+    public function apercuAnnulation(int $idSession): array
+    {
+        $session = $this->sessionAnnulable($idSession);
+        $maintenant = new DateTimeImmutable($this->sessions->maintenant());
+        $debut = new DateTimeImmutable($session['debut_session']);
+
+        return $session + [
+            'maintenant' => $maintenant,
+            'statut_annulation' => Annulation::classer($maintenant, $debut),
+            'heures_avant' => Annulation::heuresAvant($maintenant, $debut),
+            'seuil_tardive' => $debut->modify('-' . Annulation::DELAI_SANS_FRAIS_HEURES . ' hours'),
+        ];
+    }
+
+    /**
+     * E7 : annule la réservation confirmée de la session et renvoie son classement
+     * (SANS_FRAIS ou TARDIVE). La session reste proposée sur la vitrine.
+     * @throws RegleMetierException si la réservation ne peut pas être annulée
+     */
+    public function annulerReservation(int $idSession): string
+    {
+        $session = $this->sessionAnnulable($idSession);
+        $maintenant = $this->sessions->maintenant(); // horloge de la base, comme annulee_le
+        $statut = Annulation::classer(new DateTimeImmutable($maintenant), new DateTimeImmutable($session['debut_session']));
+
+        if (!$this->reservations->annuler($idSession, $statut, $maintenant)) {
+            throw new RegleMetierException('La réservation a été modifiée entre-temps. Rechargez la page.');
+        }
+
+        return $statut;
+    }
+
+    /** Préconditions E7 : une réservation active, sur une session qui n'a pas commencé. */
+    private function sessionAnnulable(int $idSession): array
+    {
+        $session = $this->sessions->trouver($idSession);
+        if ($session === null) {
+            throw new RegleMetierException('Session introuvable.');
+        }
+        if ($session['code_reservation'] === null) {
+            throw new RegleMetierException('Aucune réservation confirmée à annuler sur cette session.');
+        }
+        if (!in_array($session['etat_session'], self::ETATS_AFFECTABLES, true)
+            || new DateTimeImmutable($session['debut_session']) <= new DateTimeImmutable($this->sessions->maintenant())) {
+            throw new RegleMetierException('La partie a commencé : la réservation ne s\'annule plus.');
         }
 
         return $session;

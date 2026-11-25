@@ -22,6 +22,30 @@ final class AuthService
      */
     public function connecter(string $email, string $motDePasse): ?array
     {
+        $u = $this->verifierIdentifiants($email, $motDePasse);
+
+        return $u === null ? null : $this->ouvrirSession($u);
+    }
+
+    /**
+     * API JSON : vérifie email + mot de passe sans ouvrir de session PHP (chaque requête
+     * s'authentifie elle-même). Renvoie id, prenom, nom, role, ou null (mêmes refus que connecter).
+     */
+    public function authentifierRequete(string $email, string $motDePasse): ?array
+    {
+        $u = $this->verifierIdentifiants($email, $motDePasse);
+
+        return $u === null ? null : [
+            'id' => (int) $u['id_utilisateur'],
+            'prenom' => (string) $u['prenom_utilisateur'],
+            'nom' => (string) $u['nom_utilisateur'],
+            'role' => (string) $u['role_utilisateur'],
+        ];
+    }
+
+    /** La ligne de l'utilisateur si les identifiants sont bons et le compte actif, sinon null. */
+    private function verifierIdentifiants(string $email, string $motDePasse): ?array
+    {
         $u = $this->repository->findByEmail(trim($email));
 
         // 1. Email inconnu
@@ -39,7 +63,7 @@ final class AuthService
             return null;
         }
 
-        return $this->ouvrirSession($u);
+        return $u;
     }
 
     /**

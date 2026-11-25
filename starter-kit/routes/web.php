@@ -25,7 +25,7 @@ return static function (App $app, array $c, callable $role): void {
     $app->get('/espace', [$c['auth'], 'espace'])
         ->add($role(['RESPONSABLE', 'GAME_MASTER', 'ADMIN']));
 
-    // --- Responsable : planning et sessions (S5) --------------------------------
+    // --- Responsable : planning, sessions (S5, E5, E7), salles et maintenance (E9) ---
     $app->group('/responsable', function (RouteCollectorProxy $g) use ($c): void {
         $g->get('/sessions', [$c['equipe'], 'planning']);
         $g->get('/sessions/nouvelle', [$c['equipe'], 'nouvelleSession']);
@@ -33,6 +33,11 @@ return static function (App $app, array $c, callable $role): void {
         $g->get('/sessions/{id:[0-9]+}', [$c['equipe'], 'session']);
         $g->post('/sessions/{id:[0-9]+}/etat', [$c['equipe'], 'changerEtat']);
         $g->post('/sessions/{id:[0-9]+}/game-master', [$c['equipe'], 'affecterGameMaster']);
+        $g->get('/sessions/{id:[0-9]+}/annulation', [$c['equipe'], 'confirmerAnnulation']);
+        $g->post('/sessions/{id:[0-9]+}/annulation', [$c['equipe'], 'annulerReservation']);
+        $g->get('/salles', [$c['equipe'], 'salles']);
+        $g->get('/salles/{id:[0-9]+}', [$c['equipe'], 'salle']);
+        $g->post('/salles/{id:[0-9]+}/controles', [$c['equipe'], 'enregistrerControle']);
     })->add($role(['RESPONSABLE']));
 
     // --- Game master -------------------------------------------------------------

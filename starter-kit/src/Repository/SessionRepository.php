@@ -162,13 +162,22 @@ final class SessionRepository
     /**
      * Change l'état seulement s'il vaut encore $ancien (deux onglets ouverts ne
      * peuvent pas faire deux transitions contradictoires). Renvoie false sinon.
+     *
+     * Une partie terminée en avance prend sa vraie heure de fin : le compteur E9
+     * compare la fin des sessions à la date du dernier contrôle de la salle.
      */
     public function changerEtat(int $idSession, string $ancien, string $nouveau): bool
     {
-        $resultat = $this->database->update(
-            'session',
-            ['etat_session' => $nouveau],
-            ['id_session' => $idSession, 'etat_session' => $ancien]
+        $finReelle = $nouveau === 'TERMINEE'
+            ? ', fin_session = GREATEST(debut_session + INTERVAL 1 MINUTE, LEAST(fin_session, NOW()))'
+            : '';
+
+        $resultat = $this->database->query(
+            "UPDATE session
+                SET etat_session = :nouveau{$finReelle}
+              WHERE id_session = :id
+                AND etat_session = :ancien",
+            [':nouveau' => $nouveau, ':id' => $idSession, ':ancien' => $ancien]
         );
 
         return $resultat !== null && $resultat->rowCount() === 1;

@@ -24,10 +24,12 @@ Les décors et mécanismes s'usent à chaque partie. Un contrôle régulier évi
 - 9 sessions terminées → pas de badge.
 
 ## Implémentation
-- service/classe :
-- repository :
-- contrôleur/route :
-- BDD : table des contrôles de maintenance + procédure stockée
+- classe : `App\Domain\Maintenance::compter()` et `controleAPrevoir()` (seuil 10)
+- service : `MaintenanceService` (compteur par salle, enregistrement d'un contrôle par le responsable connecté)
+- repository : `SalleRepository::controles()`, `sessionsFinies()`, `enregistrerControle()`
+- contrôleur/route : `EquipeController`, `GET /responsable/salles`, `GET /responsable/salles/{id}`, `POST /responsable/salles/{id}/controles`
+- une partie terminée en avance prend sa vraie heure de fin (`SessionRepository::changerEtat`), sinon elle compterait encore après un contrôle
+- BDD : table `controle_maintenance` ; la procédure stockée « bilan par salle » remplacera le calcul PHP en Q1
 
 ## Tests
 
@@ -39,6 +41,5 @@ Les décors et mécanismes s'usent à chaque partie. Un contrôle régulier évi
 | limite | 9 terminées + 1 annulée | pas de badge |
 
 ## Preuves
-- issue :
-- commits :
-- capture :
+- tests : `starter-kit/tests/regles-e9.php` (9/10, 10/10, annulée ignorée, remise à zéro)
+- captures : `livrables/1-application/captures/2026-11-25_R3_*.png`
