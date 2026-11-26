@@ -8,9 +8,9 @@ Le modèle vient de [livrables/5-conception/modelisation](../../livrables/5-conc
 | Ordre | Fichier | Contenu | Tâche |
 |---|---|---|---|
 | 1 | `migrations/001_schema.sql` | 9 tables, clés étrangères, `CHECK` (E5, E7), index | S2 |
-| 2 | `migrations/002_vues.sql` | vue planning, vue tableau de bord | Q1 (à venir) |
-| 3 | `migrations/003_procedures.sql` | procédure « bilan par salle » (E9) | Q1 (à venir) |
-| 4 | `migrations/004_triggers.sql` | historique des transitions de session | Q1 (à venir) |
+| 2 | `migrations/002_vues.sql` | vues `v_planning` et `v_tableau_bord` | Q1 |
+| 3 | `migrations/003_procedures.sql` | procédure `sp_bilan_salle` : compteur E9 d'une salle | Q1 |
+| 4 | `migrations/004_triggers.sql` | trigger `trg_session_historique` : historique des changements d'état | Q1 |
 | 5 | `seed.sql` | données fictives de démonstration | S2 |
 
 `001_schema.sql` supprime puis recrée les tables : on peut le rejouer à tout moment pour repartir d'une base propre.
@@ -20,10 +20,27 @@ Le modèle vient de [livrables/5-conception/modelisation](../../livrables/5-conc
 Depuis le dossier `starter-kit`, dans PowerShell. Le mot de passe root est demandé une seule fois.
 
 ```powershell
-& "C:\Program Files\MariaDB 13.0\bin\mariadb.exe" -u root -p --default-character-set=utf8mb4 -e "DROP DATABASE IF EXISTS escapeops; CREATE DATABASE escapeops CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; USE escapeops; SOURCE database/migrations/001_schema.sql; SOURCE database/seed.sql;"
+& "C:\Program Files\MariaDB 13.0\bin\mariadb.exe" -u root -p --default-character-set=utf8mb4 -e "DROP DATABASE IF EXISTS escapeops; CREATE DATABASE escapeops CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; USE escapeops; SOURCE database/migrations/001_schema.sql; SOURCE database/migrations/002_vues.sql; SOURCE database/migrations/003_procedures.sql; SOURCE database/migrations/004_triggers.sql; SOURCE database/seed.sql;"
 ```
 
+002 à 004 se rejouent seuls sur une base existante, sans perdre les données (`DROP … IF EXISTS` puis `CREATE`) : remplacez la liste des `SOURCE` par les trois fichiers.
+
 Ne passez pas les fichiers par un pipe PowerShell (`Get-Content … | mariadb`) : PowerShell 5.1 abîme les accents. Le client MariaDB doit lire lui-même les fichiers avec `SOURCE`.
+
+## Objets SQL avancés (Q1) et où le code les utilise
+
+| Objet | Rôle | Utilisé par |
+|---|---|---|
+| `v_planning` | une ligne par session avec sa salle, son game master et sa réservation confirmée | `SessionRepository::planning()`, `trouver()`, `parGameMaster()` |
+| `v_tableau_bord` | synthèse du jour par salle : sessions, annulées, sans game master, prochaine session, incidents ouverts, bloquants, critiques | `SalleRepository::tableauDeBord()`, pour le cockpit (S6) |
+| `sp_bilan_salle(id)` | dernier contrôle et compteur E9 (sessions `TERMINEE` finies après ce contrôle) | `SalleRepository::bilan()`, puis `MaintenanceService` (badge E9) |
+| `trg_session_historique` | `AFTER UPDATE` sur `session` : une ligne dans `historique_session` quand l'état change, rien sinon | se déclenche à chaque `SessionRepository::changerEtat()` |
+
+Test sur la vraie base (dans une transaction annulée, la base n'est pas modifiée) :
+
+```powershell
+composer test-bdd
+```
 
 ## Données de démonstration
 
@@ -64,3 +81,9 @@ Mot de passe de tous les comptes (fictif) : `demo-escapeops-2026`
   - un incident `RESOLU` sans date ;
   - la suppression d'un game master qui anime encore des sessions.
 - `password_verify('demo-escapeops-2026', mdp_hash)` renvoie vrai.
+
+## Vérifications Q1 sur une base neuve (26/11/2026)
+
+- 001 à 004 puis le seed s'importent sans erreur sur une base vide (`escapeops_q1`).
+- `CALL sp_bilan_salle(1)`, `(2)`, `(3)` donnent 4, 6 et 9, comme le calcul PHP.
+- `composer test-bdd` : 50 vérifications vertes (vues, procédure, trigger, scénario PREVUE → PRETE → EN_COURS → TERMINEE, annulation ignorée, contrôle qui remet à zéro).

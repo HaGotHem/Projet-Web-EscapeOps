@@ -8,7 +8,6 @@ use App\Domain\Maintenance;
 use App\Domain\RegleMetierException;
 use App\Domain\SaisieInvalide;
 use App\Repository\SalleRepository;
-use DateTimeImmutable;
 
 /**
  * Salles et maintenance préventive côté responsable (règle E9).
@@ -61,8 +60,10 @@ final class MaintenanceService
         $dernier = $controles[0] ?? null;
         $depuis = $dernier['controle_le'] ?? null;
 
+        // Les sessions servent à l'affichage de la fiche ; le compteur vient de la
+        // procédure stockée sp_bilan_salle (même règle que Maintenance::compter).
         $sessions = $this->salles->sessionsFinies($idSalle, $depuis);
-        $compteur = Maintenance::compter($sessions, $depuis === null ? null : new DateTimeImmutable($depuis));
+        $compteur = $this->salles->bilan($idSalle)['compteur'] ?? 0;
 
         return $salle + [
             'compteur' => $compteur,

@@ -28,6 +28,9 @@
       "php tests/regles-e7.php",
       "php tests/regles-e9.php",
       "php tests/saisie-incident.php"
+    ],
+    "test-bdd": [
+      "php tests/sql-avance.php"
     ]
   }
 }

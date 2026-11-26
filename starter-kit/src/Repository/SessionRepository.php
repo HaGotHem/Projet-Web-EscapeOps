@@ -12,20 +12,11 @@ use PDO;
  */
 final class SessionRepository
 {
-    /** Colonnes communes : la session, sa salle, son game master et sa réservation confirmée. */
-    private const SELECT_SESSION = "
-        SELECT s.id_session, s.debut_session, s.fin_session, s.etat_session,
-               s.id_salle, sa.nom_salle, sa.duree_jeu_min, sa.remise_etat_min,
-               sa.capacite_min, sa.capacite_max,
-               s.id_game_master, gm.prenom_utilisateur AS gm_prenom, gm.nom_utilisateur AS gm_nom,
-               r.code_reservation, r.nom_groupe, r.nb_joueurs,
-               r.contact_nom, r.contact_email, r.contact_tel, r.reservee_le
-          FROM session s
-          JOIN salle sa ON sa.id_salle = s.id_salle
-          LEFT JOIN utilisateur gm ON gm.id_utilisateur = s.id_game_master
-          LEFT JOIN reservation r ON r.id_session = s.id_session
-                                 AND r.statut_reservation = 'CONFIRMEE'
-    ";
+    /**
+     * La session, sa salle, son game master et sa réservation confirmée :
+     * les jointures sont dans la vue SQL v_planning (database/migrations/002_vues.sql).
+     */
+    private const SELECT_SESSION = "SELECT s.* FROM v_planning s";
 
     public function __construct(private Medoo $database)
     {
@@ -43,7 +34,7 @@ final class SessionRepository
         $sql = self::SELECT_SESSION . "
             WHERE s.debut_session >= CURDATE()
               AND s.debut_session < CURDATE() + INTERVAL :jours DAY
-            ORDER BY s.debut_session, sa.id_salle";
+            ORDER BY s.debut_session, s.id_salle";
 
         return $this->database->query($sql, [':jours' => $jours])->fetchAll(PDO::FETCH_ASSOC);
     }

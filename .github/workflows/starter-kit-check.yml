@@ -71,13 +71,17 @@ jobs:
       - name: Tests sans BDD
         run: composer test
 
-      - name: Créer la base EscapeOps (schéma + seed)
+      - name: Créer la base EscapeOps (schéma, vues, procédure, trigger, seed)
         # Le client mysql lit lui-même les fichiers : une erreur SQL arrête l'étape.
+        # Import en root : avec le binlog actif, MySQL 8 refuse CREATE TRIGGER à un compte sans SUPER.
         run: |
+          mysql -h 127.0.0.1 -u root -prootpass --default-character-set=utf8mb4 escapeops \
+            -e "SOURCE database/migrations/001_schema.sql; SOURCE database/migrations/002_vues.sql; SOURCE database/migrations/003_procedures.sql; SOURCE database/migrations/004_triggers.sql; SOURCE database/seed.sql;"
           mysql -h 127.0.0.1 -u escapeops -pescapeopspass --default-character-set=utf8mb4 escapeops \
-            -e "SOURCE database/migrations/001_schema.sql; SOURCE database/seed.sql;"
-          mysql -h 127.0.0.1 -u escapeops -pescapeopspass --default-character-set=utf8mb4 escapeops \
-            -e "SELECT COUNT(*) AS salles FROM salle; SELECT COUNT(*) AS sessions FROM session;"
+            -e "SELECT COUNT(*) AS salles FROM salle; SELECT COUNT(*) AS sessions FROM session; CALL sp_bilan_salle(3);"
+
+      - name: Tester le SQL avancé (Q1) sur la vraie base
+        run: composer test-bdd
 
       - name: Tester la vitrine avec le vrai SGBD
         run: |

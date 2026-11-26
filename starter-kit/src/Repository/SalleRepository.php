@@ -96,6 +96,43 @@ final class SalleRepository
         return $this->database->query($sql, $parametres)->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * E9 : bilan d'une salle calculé par la procédure stockée sp_bilan_salle
+     * (database/migrations/003_procedures.sql) : compteur et dernier contrôle.
+     * Renvoie null si la salle n'existe pas.
+     *
+     * @return array{id_salle: int, dernier_controle: ?string, compteur: int}|null
+     */
+    public function bilan(int $idSalle): ?array
+    {
+        $stmt = $this->database->pdo->prepare('CALL sp_bilan_salle(:salle)');
+        $stmt->execute([':salle' => $idSalle]);
+
+        try {
+            $ligne = $stmt->fetch(PDO::FETCH_ASSOC);
+        } finally {
+            $stmt->closeCursor();
+        }
+
+        if (!is_array($ligne)) {
+            return null;
+        }
+
+        return [
+            'id_salle' => (int) $ligne['id_salle'],
+            'dernier_controle' => $ligne['dernier_controle'],
+            'compteur' => (int) $ligne['compteur'],
+        ];
+    }
+
+    /** Cockpit (S6) : la synthèse du jour de chaque salle, lue dans la vue v_tableau_bord. */
+    public function tableauDeBord(): array
+    {
+        return $this->database
+            ->query('SELECT * FROM v_tableau_bord ORDER BY id_salle')
+            ->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     /** E9 : enregistre un contrôle à l'heure de la base ; il remet le compteur de la salle à zéro. */
     public function enregistrerControle(int $idSalle, int $idResponsable, ?string $commentaire): void
     {
